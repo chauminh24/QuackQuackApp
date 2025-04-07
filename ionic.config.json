@@ -1,0 +1,7 @@
+{
+  "name": "QuackQuackApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
