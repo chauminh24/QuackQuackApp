@@ -3,12 +3,13 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, Platform } from '@ionic/angular'; // Import Platform for isIOS detection
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
+  standalone: true,
   imports: [
     CommonModule,
     IonicModule,
@@ -18,8 +19,11 @@ import { IonicModule } from '@ionic/angular';
 export class LoginPage {
   email: string = ''; // Bind this to the email input field
   password: string = ''; // Bind this to the password input field
+  isIOS: boolean; // Property to detect if the platform is iOS
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService, private platform: Platform) {
+    this.isIOS = this.platform.is('ios'); // Check if the platform is iOS
+  }
 
   async onLogin() {
     try {
@@ -31,5 +35,10 @@ export class LoginPage {
     } catch (error) {
       console.error('Login failed', error);
     }
+  }
+
+  toggleMode() {
+    // Logic to toggle between login and registration modes
+    console.log('Toggle between login and registration modes');
   }
 }

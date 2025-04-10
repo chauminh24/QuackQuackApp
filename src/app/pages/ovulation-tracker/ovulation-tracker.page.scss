@@ -1,0 +1,26 @@
+ion-header, ion-toolbar, ion-title {
+    font-family: 'Berlin Sans FB Demi Bold', sans-serif;
+    text-transform: uppercase;
+    background: #ffffff;
+    color: #000;
+  }
+  
+  ion-content {
+    font-family: 'Segoe UI Variable', sans-serif;
+    background: #ffffff;
+    color: #000;
+    padding: 1rem;
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    ion-header, ion-toolbar, ion-title {
+      background: #121212;
+      color: #fff;
+    }
+  
+    ion-content {
+      background: #121212;
+      color: #fff;
+    }
+  }
+  
