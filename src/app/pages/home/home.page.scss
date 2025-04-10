@@ -1,0 +1,155 @@
+/* home.page.scss */
+ion-header {
+  ion-toolbar {
+    --background: var(--ion-color-primary);
+    --color: white;
+    
+    .location-time {
+      padding-left: 16px;
+      
+      h4 {
+        margin: 0;
+        font-weight: 600;
+        font-size: 1rem;
+      }
+      
+      p {
+        margin: 0;
+        font-size: 0.8rem;
+        opacity: 0.8;
+      }
+    }
+    
+    .avatar {
+      width: 32px;
+      height: 32px;
+      margin-right: 8px;
+    }
+    
+    .strawberry-button {
+      --padding-start: 0;
+      --padding-end: 0;
+      margin-right: 8px;
+      
+      ion-icon {
+        font-size: 24px;
+      }
+    }
+  }
+}
+
+ion-content {
+  --background: transparent;
+  
+  .weather-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+  }
+  
+  .main-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 60vh;
+    padding: 16px;
+    
+    .temperature-display {
+      text-align: center;
+      
+      h1 {
+        font-size: 4rem;
+        margin: 0;
+        font-weight: 300;
+      }
+      
+      p {
+        margin: 0;
+        font-size: 1.2rem;
+        text-transform: capitalize;
+      }
+    }
+    
+    .duck-animation {
+      margin-top: 2rem;
+    }
+  }
+  
+  .bottom-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(var(--ion-color-light-rgb), 0.95);
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    max-height: 30vh;
+    overflow: hidden;
+    
+    &.expanded {
+      max-height: 60vh;
+    }
+    
+    .panel-header {
+      display: flex;
+      justify-content: center;
+      padding: 8px;
+      cursor: pointer;
+      
+      ion-icon {
+        font-size: 24px;
+        color: var(--ion-color-medium);
+      }
+    }
+    
+    .panel-content {
+      padding: 0 16px 16px;
+      
+      .hourly-forecast {
+        display: flex;
+        justify-content: space-between;
+        overflow-x: auto;
+        padding: 8px 0;
+        
+        .hour-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          min-width: 48px;
+          padding: 0 8px;
+          
+          p {
+            margin: 4px 0;
+            font-size: 0.8rem;
+          }
+          
+          ion-icon {
+            font-size: 24px;
+            color: var(--ion-color-primary);
+          }
+        }
+      }
+      
+      .expanded-content {
+        margin-top: 16px;
+        
+        ion-button {
+          --padding-start: 0;
+          --padding-end: 0;
+          margin: 0;
+          height: auto;
+          
+          ion-icon {
+            margin-left: 4px;
+          }
+        }
+      }
+    }
+  }
+}

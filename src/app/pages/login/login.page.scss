@@ -1,0 +1,102 @@
+/* login.page.scss */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .logo-container {
+    text-align: center;
+    margin-bottom: 2rem;
+    
+    .app-logo {
+      width: 120px;
+      height: auto;
+    }
+  }
+  
+  .form-container {
+    ion-item {
+      --border-color: var(--ion-color-medium);
+      margin-bottom: 1rem;
+    }
+  }
+  
+  .login-button {
+    margin-top: 2rem;
+    --border-radius: 50px;
+    height: 48px;
+  }
+  
+  .social-login {
+    margin: 2rem 0;
+    text-align: center;
+    
+    .divider {
+      position: relative;
+      color: var(--ion-color-medium);
+      
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 30%;
+        height: 1px;
+        background: var(--ion-color-medium);
+      }
+      
+      &::before {
+        left: 0;
+      }
+      
+      &::after {
+        right: 0;
+      }
+    }
+  }
+  
+  .social-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    
+    .social-button {
+      --border-radius: 50%;
+      --padding-start: 0;
+      --padding-end: 0;
+      width: 48px;
+      height: 48px;
+      margin: 0 0.5rem;
+      
+      &.google {
+        --background: #ffffff;
+        --color: #DB4437;
+      }
+      
+      &.facebook {
+        --background: #1877F2;
+        --color: #ffffff;
+      }
+      
+      &.apple {
+        --background: #000000;
+        --color: #ffffff;
+      }
+    }
+  }
+  
+  .toggle-mode {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    
+    ion-button {
+      --padding-start: 4px;
+      --padding-end: 4px;
+    }
+  }
