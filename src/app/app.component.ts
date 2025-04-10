@@ -2,6 +2,7 @@ import { Component, Renderer2 } from '@angular/core';
 
 @Component({
   selector: 'app-root',
+  template: '<ion-router-outlet></ion-router-outlet>',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
   standalone: false,
