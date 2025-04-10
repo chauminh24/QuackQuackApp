@@ -1,13 +1,12 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>loading</ion-title>
+    <ion-title>Loading...</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">loading</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading your data, please wait...</p>
+  </div>
 </ion-content>

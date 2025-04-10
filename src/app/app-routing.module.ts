@@ -4,7 +4,16 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./pages/loading/loading.page').then(m => m.LoadingPage)
+    redirectTo: 'launching', // Redirect the root path to the launching page
+    pathMatch: 'full'
+  },
+  {
+    path: 'launching',
+    loadComponent: () => import('./pages/launching/launching.page').then(m => m.LaunchingPage) // Load the launching page
+  },
+  {
+    path: 'loading',
+    loadComponent: () => import('./pages/loading/loading.page').then(m => m.LoadingPage) // Load the loading page
   },
   {
     path: 'login',
