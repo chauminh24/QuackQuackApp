@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar>
     <!-- Header with Location/Time and Avatar -->
     <ion-buttons slot="start">
       <div class="location-time">
@@ -9,14 +9,13 @@
         </ion-text>
       </div>
     </ion-buttons>
-    
+
     <ion-buttons slot="end">
       <ion-avatar (click)="openSettings()" class="avatar">
         <img src="assets/images/default-avatar.png" alt="User Avatar">
       </ion-avatar>
       <ion-button fill="clear" (click)="openOvulationTracker()" class="strawberry-button">
-        <ion-icon name="nutrition" color="light"></ion-icon>
-      </ion-button>
+        <img src="assets/icon/strawberryBtn01.svg" alt="Ovulation Tracker" class="strawberry-icon" /> </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -24,7 +23,7 @@
 <ion-content>
   <!-- Weather Background -->
   <app-weather-background [weatherCode]="currentWeather?.weather[0]?.id"></app-weather-background>
-  
+
   <!-- Main Content -->
   <div class="main-content">
     <!-- Temperature Display -->
@@ -34,38 +33,26 @@
         <p>{{ currentWeather?.weather[0]?.main }}</p>
       </ion-text>
     </div>
-    
+
     <!-- Animated Duck -->
     <div class="duck-animation">
       <app-animated-duck [weatherCondition]="currentWeather?.weather[0]?.main"></app-animated-duck>
     </div>
   </div>
-  
+
   <!-- Bottom Panel -->
-  <div class="bottom-panel" [class.expanded]="isPanelExpanded">
-    <div class="panel-header" (click)="togglePanel()">
-      <ion-icon [name]="isPanelExpanded ? 'chevron-down' : 'chevron-up'"></ion-icon>
-    </div>
-    
-    <div class="panel-content">
-      <!-- Hourly Forecast (Collapsed View) -->
-      <div class="hourly-forecast">
-        <div class="hour-item" *ngFor="let hour of hourlyForecast">
-          <ion-text>
-            <p>{{ hour.time }}</p>
-            <ion-icon [name]="hour.icon"></ion-icon>
-            <p>{{ hour.temp }}°</p>
-          </ion-text>
-        </div>
-      </div>
-      
-      <!-- Expanded Content -->
-      <div class="expanded-content" *ngIf="isPanelExpanded">
-        <ion-button fill="clear" (click)="openDetailedForecast()">
-          View Detailed Forecast
-          <ion-icon slot="end" name="arrow-forward"></ion-icon>
-        </ion-button>
-      </div>
+  <!-- Hourly Forecast Panel (floating) -->
+<div class="hourly-panel" (click)="openDetailedForecast()">
+  <ion-text class="panel-title">Hourly Today</ion-text>
+  <div class="hourly-forecast">
+    <div class="hour-item" *ngFor="let hour of hourlyForecast">
+      <ion-text>
+        <p>{{ hour.time }}</p>
+        <ion-icon [name]="hour.icon"></ion-icon>
+        <p>{{ hour.temp }}°</p>
+      </ion-text>
     </div>
   </div>
+</div>
+
 </ion-content>

@@ -28,50 +28,110 @@
 
 /* Global CSS Variables */
 :root {
-    --ion-color-primary: #FE6C23;
-    --ion-color-primary-rgb: 254, 108, 35;
-    --ion-color-primary-contrast: #ffffff;
-    --ion-color-primary-contrast-rgb: 255, 255, 255;
-    --ion-color-primary-shade: #e0611f;
-    --ion-color-primary-tint: #fe7b3c;
-  
-    --ion-color-secondary: #76B3D0;
-    --ion-color-secondary-rgb: 118, 179, 208;
-    --ion-color-secondary-contrast: #ffffff;
-    --ion-color-secondary-contrast-rgb: 255, 255, 255;
-    --ion-color-secondary-shade: #68a0ba;
-    --ion-color-secondary-tint: #85bdd5;
-  
-    --ion-color-tertiary: #FFE9CA;
-    --ion-color-tertiary-rgb: 255, 233, 202;
-    --ion-color-tertiary-contrast: #000000;
-    --ion-color-tertiary-contrast-rgb: 0, 0, 0;
-    --ion-color-tertiary-shade: #e0cdc0;
-    --ion-color-tertiary-tint: #fff0d6;
-  }
-  
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --ion-background-color: #121212;
-      --ion-text-color: #ffffff;
-  
-      --ion-color-primary: #FF974D;
-      --ion-color-secondary: #A4D7ED;
-      --ion-color-tertiary: #FFD7A8;
-    }
-  }
-  
-  body {
-    font-family: 'Roboto', sans-serif;
-  }
-  ion-text {
-    font-size: 0.9rem;
-    font-family: 'Roboto', sans-serif;
-  }
+  --ion-color-primary: #FE6C23;
+  --ion-color-primary-rgb: 254, 108, 35;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #e0611f;
+  --ion-color-primary-tint: #fe7b3c;
 
-  ion-button {
-    --color: var(--ion-color-primary);
-    font-weight: 600;
-    font-family: 'Belanosima', sans-serif;
+  --ion-color-secondary: #76B3D0;
+  --ion-color-secondary-rgb: 118, 179, 208;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #68a0ba;
+  --ion-color-secondary-tint: #85bdd5;
+
+  --ion-color-tertiary: #FFE9CA;
+  --ion-color-tertiary-rgb: 255, 233, 202;
+  --ion-color-tertiary-contrast: #000000;
+  --ion-color-tertiary-contrast-rgb: 0, 0, 0;
+  --ion-color-tertiary-shade: #e0cdc0;
+  --ion-color-tertiary-tint: #fff0d6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ion-background-color: #121212;
+    --ion-text-color: #ffffff;
+
+    --ion-color-primary: #FF974D;
+    --ion-color-secondary: #A4D7ED;
+    --ion-color-tertiary: #FFD7A8;
   }
-  
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+ion-text {
+  font-size: 0.9rem;
+  font-family: 'Roboto', sans-serif;
+}
+
+ion-button {
+  --color: var(--ion-color-primary);
+  font-weight: 600;
+  font-family: 'Belanosima', sans-serif;
+}
+
+/* Transparent header and toolbar */
+ion-header,
+ion-toolbar {
+  background: transparent !important;
+  box-shadow: none !important;
+  --background: transparent !important;
+  --ion-background-color: transparent !important;
+  --ion-color-base: transparent !important;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+/* Allow content to flow behind the toolbar for translucency */
+ion-content {
+  --background: transparent;
+  position: relative;
+  z-index: 0;
+  padding-left: 20px;
+  padding-right: 16px;
+  /* Optionally add top/bottom as well */
+  /* padding-top: 12px;
+       padding-bottom: 12px; */
+
+}
+
+/* Optional: Ensure header stays on top */
+ion-header {
+  position: absolute;
+  width: 100%;
+  z-index: 10;
+  border: none;
+}
+
+/* Extra spacing from status bar if needed */
+ion-toolbar {
+  padding-top: env(safe-area-inset-top, 20px);
+  --border-width: 0 !important;
+  --box-shadow: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Fixes for buttons/icons layering and visibility */
+ion-buttons,
+ion-button,
+ion-avatar {
+  z-index: 11;
+}
+
+/* Consistent text color */
+.location-time h4,
+.location-time p,
+ion-text {
+  color: var(--ion-text-color, #000);
+}
+
+.main-content {
+  margin-left: 2em;
+}

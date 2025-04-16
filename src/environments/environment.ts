@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  weatherApiKey: '3c4861a91617e6bd4a15df4b9230a623 ',
+  weatherApiKey: 'f7246f77874f04ad337197d8909513c1',
 };
 
 /*

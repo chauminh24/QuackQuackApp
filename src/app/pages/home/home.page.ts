@@ -1,4 +1,3 @@
-// home.page.ts
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { DetailedForecastComponent } from '../../components/detailed-forecast/detailed-forecast.component';
@@ -11,6 +10,7 @@ import { IonicModule } from '@ionic/angular';
 import { AnimatedDuckComponent } from '../../components/animated-duck/animated-duck.component';
 import { WeatherBackgroundComponent } from 'src/app/components/weather-background/weather-background.component';
 import { SettingsPage } from '../settings/settings.page';
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -35,25 +35,49 @@ export class HomePage implements OnInit {
     private weatherService: WeatherService,
     private locationService: LocationService,
     private modalCtrl: ModalController
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.updateTime();
     setInterval(() => this.updateTime(), 60000);
 
     try {
-      // Get user's current location
-      const coords = await this.locationService.getCurrentLocation();
-      this.location = await this.locationService.getLocationName(coords.latitude, coords.longitude);
+      // Attempt to get user's current location
+      const position = await this.locationService.getCurrentLocation();
+      const { latitude, longitude } = position.coords; // Access latitude and longitude from coords
+      this.location = await this.locationService.getLocationName(latitude, longitude);
 
       // Fetch current weather
-      this.currentWeather = await this.weatherService.getCurrentWeather(coords.latitude, coords.longitude);
+      this.currentWeather = await this.weatherService.getCurrentWeather(latitude, longitude);
 
       // Fetch hourly forecast
-      const forecastData = await this.weatherService.getHourlyForecast(coords.latitude, coords.longitude);
+      const forecastData = await this.weatherService.getHourlyForecast(latitude, longitude);
       this.hourlyForecast = this.processHourlyForecast(forecastData);
     } catch (error) {
-      console.error('Error loading weather data:', error);
+      console.error('Error loading weather data:', (error as any).message);
+
+      // Handle location permission denial or other errors
+      if ((error as any).message === 'User denied Geolocation') {
+        this.location = 'Galway, Ireland'; // Default location if user denies geolocation
+        await this.loadDefaultWeather();
+      } else {
+        this.location = 'Error retrieving location';
+      }
+    }
+  }
+
+  async loadDefaultWeather() {
+    try {
+      // Use Galway's coordinates for the default location
+      const defaultLatitude = 53.2707; // Galway latitude
+      const defaultLongitude = -9.0568; // Galway longitude
+
+      // Fetch weather data for the default location
+      this.currentWeather = await this.weatherService.getCurrentWeather(defaultLatitude, defaultLongitude);
+      const forecastData = await this.weatherService.getHourlyForecast(defaultLatitude, defaultLongitude);
+      this.hourlyForecast = this.processHourlyForecast(forecastData);
+    } catch (error) {
+      console.error('Error loading default weather data:', (error as any).message);
     }
   }
 
@@ -69,6 +93,7 @@ export class HomePage implements OnInit {
       temp: Math.round(entry.main.temp),
     }));
   }
+
   mapWeatherIcon(iconCode: string): string {
     // Map OpenWeatherMap icon codes to Ionicons or custom icons
     const iconMap: { [key: string]: string } = {
@@ -93,7 +118,7 @@ export class HomePage implements OnInit {
     };
     return iconMap[iconCode] || 'help-circle'; // Default icon
   }
-  
+
   togglePanel() {
     this.isPanelExpanded = !this.isPanelExpanded;
   }
@@ -113,13 +138,43 @@ export class HomePage implements OnInit {
   }
 
   async openDetailedForecast() {
-    const modal = await this.modalCtrl.create({
-      component: DetailedForecastComponent,
-      componentProps: {
-        weatherData: this.currentWeather,
-        location: this.location
-      }
-    });
-    await modal.present();
+    try {
+      // Fetch current location
+      const position = await this.locationService.getCurrentLocation();
+      const { latitude, longitude } = position.coords;
+
+      // Fetch current weather
+      const currentWeather = await this.weatherService.getCurrentWeather(latitude, longitude);
+
+      // Fetch hourly forecast
+      const hourlyForecastData = await this.weatherService.getHourlyForecast(latitude, longitude);
+      const hourlyForecast = hourlyForecastData.list.slice(0, 12).map((hour: any) => ({
+        time: new Date(hour.dt * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        temp: Math.round(hour.main.temp),
+        icon: this.mapWeatherIcon(hour.weather[0].icon),
+      }));
+
+      // Fetch daily forecast
+      const dailyForecast = await this.weatherService.getDailyForecast(latitude, longitude);
+
+      // Combine all weather data into a single object
+      const weatherData = {
+        current: currentWeather,
+        hourly: hourlyForecast,
+        daily: dailyForecast,
+      };
+
+      // Open the modal with the combined weather data
+      const modal = await this.modalCtrl.create({
+        component: DetailedForecastComponent,
+        componentProps: {
+          weatherData: weatherData, // Pass the combined weather data
+          location: this.location, // Pass the location name
+        },
+      });
+      await modal.present();
+    } catch (error) {
+      console.error('Error opening detailed forecast:', error);
+    }
   }
 }

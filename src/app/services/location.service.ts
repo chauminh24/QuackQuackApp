@@ -5,18 +5,25 @@ import { Geolocation } from '@capacitor/geolocation';
   providedIn: 'root',
 })
 export class LocationService {
-  constructor() {}
+  constructor() { }
 
-  async getCurrentLocation(): Promise<{ latitude: number; longitude: number }> {
-    try {
-      const position = await Geolocation.getCurrentPosition();
-      return {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-      };
-    } catch (error) {
-      throw new Error('Unable to retrieve location: ' + (error as Error).message);
-    }
+  async getCurrentLocation(): Promise<GeolocationPosition> {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject(new Error('Geolocation is not supported by this browser.'));
+      } else {
+        navigator.geolocation.getCurrentPosition(
+          (position) => resolve(position),
+          (error) => {
+            if (error.code === error.PERMISSION_DENIED) {
+              reject(new Error('User denied Geolocation'));
+            } else {
+              reject(new Error('Unable to retrieve location'));
+            }
+          }
+        );
+      }
+    });
   }
 
   async getLocationName(latitude: number, longitude: number): Promise<string> {
@@ -25,7 +32,12 @@ export class LocationService {
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
       );
       const data = await response.json();
-      return data.display_name || 'Unknown location';
+  
+      // Extract city and country from the address field
+      const city = data.address?.city || data.address?.town || data.address?.village || 'Unknown city';
+      const country = data.address?.country || 'Unknown country';
+  
+      return `${city}, ${country}`; // Return city and country
     } catch (error) {
       console.error('Error fetching location name:', error);
       return 'Unknown location';

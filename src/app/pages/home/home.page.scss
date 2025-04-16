@@ -1,94 +1,160 @@
-.location-time {
-  h4 {
-    margin: 0;
-    font-size: 1rem;
-    font-family: 'Berlin Sans FB Demi Bold', sans-serif;
-    text-transform: uppercase;
-    color: #fff;
-  }
+// Light and dark background
+:host {
+  --background: #ffffff;
 
-  p {
-    font-size: 0.8rem;
-    font-family: 'Segoe UI Variable', sans-serif;
-    color: #fff;
-  }
-}
-
-.avatar {
-  border: 2px solid var(--ion-color-primary);
-}
-
-.strawberry-button {
-  --color: var(--ion-color-tertiary);
-}
-
-.temperature-display {
-  text-align: center;
-  margin-top: 1.5rem;
-
-  h1 {
-    font-size: 3.5rem;
-    font-family: 'Berlin Sans FB Demi Bold', sans-serif;
-    color: #fff;
-  }
-
-  p {
-    font-size: 1rem;
-    font-family: 'Segoe UI Variable', sans-serif;
-    color: #fff;
-  }
-}
-
-.bottom-panel {
-  background-color: #fff;
-  padding: 1rem;
-  border-radius: 1rem 1rem 0 0;
-  transition: height 0.3s ease;
-
-  .panel-header {
-    text-align: center;
-    padding: 0.5rem;
+  ion-content {
+    background-color: var(--background);
     color: #000;
   }
 
-  .hourly-forecast {
-    display: flex;
-    justify-content: space-between;
-    overflow-x: scroll;
+  @media (prefers-color-scheme: dark) {
+    --background: #121212;
 
-    .hour-item {
-      font-family: 'Segoe UI Variable', sans-serif;
-      text-align: center;
-      color: #000;
-    }
-  }
-
-  .expanded-content {
-    margin-top: 1rem;
-
-    ion-button {
-      font-family: 'Berlin Sans FB', sans-serif;
+    ion-content {
+      background-color: var(--background);
+      color: #fff;
     }
   }
 }
 
+// Toolbar Styling
+ion-toolbar {
+  background: transparent;
+  padding-top: 12px;
+  padding-bottom: 6px;
+  border: none;
+  box-shadow: none;
+}
+
+ion-header {
+  margin-top: 12px; // extra space above toolbar
+}
+
+// Location and Time
+.location-time h4 {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.location-time p {
+  font-size: 1rem;
+  margin: 0;
+  opacity: 0.75;
+}
+
+// Header Right Section (Avatar + Button)
+ion-buttons[slot="end"] {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-top: 2em;
+}
+
+.strawberry-button {
+  padding: 0;
+  min-width: auto;
+  height: auto;
+}
+
+.strawberry-icon {
+  width: 40px;
+  height: 40px;
+  display: block;
+}
+
+
+// Main Content
+.main-content {
+  position: absolute;
+  top: 15%;
+  left: 16px;
+  right: 16px;
+  z-index: 2;
+  text-align: left;
+}
+
+.temperature-display h1 {
+  font-size: 4rem;
+  font-family: 'Berlin Sans FB Demi', sans-serif;
+  margin: 0;
+}
+
+.temperature-display p {
+  margin: 0;
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.duck-animation {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}
+
+// Bottom Panel
+/* Floating Hourly Panel */
+.hourly-panel {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 12px 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  z-index: 5;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.hourly-panel:hover {
+  transform: scale(1.01);
+}
+
+.panel-title {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.hourly-forecast {
+  display: flex;
+  overflow-x: auto;
+  gap: 20px;
+  padding: 4px 0;
+}
+
+.hour-item {
+  text-align: center;
+  flex: 0 0 auto;
+}
+
+.hour-item ion-icon {
+  font-size: 28px;
+}
+
+.hour-item p {
+  font-size: 1rem;
+  margin: 2px 0;
+}
+
+/* Dark mode support */
 @media (prefers-color-scheme: dark) {
-  .bottom-panel {
-    background-color: #1e1e1e;
-
-    .panel-header,
-    .hour-item {
-      color: #fff;
-    }
-  }
-
-  .temperature-display h1,
-  .temperature-display p {
-    color: #fff;
-  }
-
-  .location-time h4,
-  .location-time p {
+  .hourly-panel {
+    background: #1e1e1e;
     color: #fff;
   }
 }
