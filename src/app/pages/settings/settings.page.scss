@@ -1,26 +1,43 @@
-ion-header, ion-toolbar, ion-title {
-    font-family: 'Berlin Sans FB Demi Bold', sans-serif;
-    text-transform: uppercase;
-    background: #fff;
-    color: #000;
-  }
-  
-  ion-content {
-    font-family: 'Segoe UI Variable', sans-serif;
-    background: #fff;
-    color: #000;
+.settings-content {
+  --ion-background-color: #fff;
+
+  .settings-header {
+    display: flex;
+    align-items: center;
     padding: 1rem;
-  }
-  
-  @media (prefers-color-scheme: dark) {
-    ion-header, ion-toolbar, ion-title {
-      background: #121212;
-      color: #fff;
+
+    .settings-avatar {
+      width: 64px;
+      height: 64px;
+      margin-right: 1rem;
     }
-  
-    ion-content {
-      background: #121212;
-      color: #fff;
+
+    .user-info {
+      h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+
+      p {
+        margin: 0;
+        color: var(--ion-color-medium);
+        font-size: 0.9rem;
+      }
     }
   }
-  
+
+  .settings-list {
+    margin-top: 1rem;
+
+    ion-item {
+      border-radius: 12px;
+      margin: 0.5rem 1rem;
+      background: #f9f9f9;
+
+      ion-icon {
+        color: var(--ion-color-danger);
+      }
+    }
+  }
+}

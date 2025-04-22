@@ -1,4 +1,3 @@
-// settings.page.ts
 import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { AuthService } from '../../services/auth.service';
@@ -23,6 +22,7 @@ export class SettingsPage {
     name: 'User Name',
     avatar: 'assets/images/default-avatar.png'
   };
+
   settings = {
     appLock: false,
     notifications: true,
@@ -30,7 +30,7 @@ export class SettingsPage {
   };
 
   constructor(
-    private auth: AuthService,
+    public auth: AuthService,
     private router: Router,
     private modalCtrl: ModalController
   ) {}
