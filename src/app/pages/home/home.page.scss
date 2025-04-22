@@ -17,6 +17,10 @@
   }
 }
 
+.text-dark {
+  color: var(--ion-color-dark, #000); // fallback to black
+}
+
 // Toolbar Styling
 ion-toolbar {
   background: transparent;
@@ -156,5 +160,8 @@ ion-buttons[slot="end"] {
   .hourly-panel {
     background: #1e1e1e;
     color: #fff;
+  }
+  .text-dark {
+    color: white;
   }
 }

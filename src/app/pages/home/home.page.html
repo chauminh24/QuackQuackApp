@@ -43,10 +43,10 @@
   <!-- Bottom Panel -->
   <!-- Hourly Forecast Panel (floating) -->
 <div class="hourly-panel" (click)="openDetailedForecast()">
-  <ion-text class="panel-title">Hourly Today</ion-text>
+  <ion-text class="panel-title text-dark">Hourly Today</ion-text>
   <div class="hourly-forecast">
     <div class="hour-item" *ngFor="let hour of hourlyForecast">
-      <ion-text>
+      <ion-text class="text-dark">
         <p>{{ hour.time }}</p>
         <ion-icon [name]="hour.icon"></ion-icon>
         <p>{{ hour.temp }}°</p>

@@ -28,6 +28,9 @@
 
 /* Global CSS Variables */
 :root {
+  --ion-background-color: #fcf4e8;
+  --ion-text-color: #ffffff;
+
   --ion-color-primary: #FE6C23;
   --ion-color-primary-rgb: 254, 108, 35;
   --ion-color-primary-contrast: #ffffff;
@@ -48,6 +51,8 @@
   --ion-color-tertiary-contrast-rgb: 0, 0, 0;
   --ion-color-tertiary-shade: #e0cdc0;
   --ion-color-tertiary-tint: #fff0d6;
+
+  --ion-color-dark: black;
 }
 
 @media (prefers-color-scheme: dark) {

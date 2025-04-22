@@ -1,12 +1,15 @@
 .settings-content {
   --ion-background-color: #fff;
+  margin: 3em;
 
   .settings-header {
     display: flex;
     align-items: center;
     padding: 1rem;
+    margin: 1.5em;
 
     .settings-avatar {
+      margin-top: 2em;
       width: 64px;
       height: 64px;
       margin-right: 1rem;
@@ -26,18 +29,59 @@
       }
     }
   }
-
   .settings-list {
-    margin-top: 1rem;
-
+    margin: 1rem 1.5em;
+  
     ion-item {
       border-radius: 12px;
-      margin: 0.5rem 1rem;
+      margin: 0.5rem 0;
       background: #f9f9f9;
-
+      --padding-start: 16px;
+      --inner-padding-start: 0;
+      --inner-padding-end: 0;
+  
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+  
+      ion-label {
+        flex: 1;
+        font-size: 1rem;
+      }
+  
+      .toggle-container {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex-shrink: 0;
+        margin-right: 0;
+      }
+  
+      ion-toggle {
+        --padding-start: 0;
+        --padding-end: 0;
+        margin: 0;
+      }
+  
       ion-icon {
         color: var(--ion-color-danger);
       }
     }
+  }
+  
+}
+
+.logout-item {
+  justify-content: center;
+  text-align: center;
+  --padding-start: 0;
+  --inner-padding-start: 0;
+  --inner-padding-end: 0;
+  --background: transparent;
+
+  .logout-label {
+    font-weight: bold;
+    color: var(--ion-color-danger);
+    font-size: 1rem;
   }
 }
