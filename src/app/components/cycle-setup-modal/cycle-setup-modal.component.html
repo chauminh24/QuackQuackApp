@@ -1,0 +1,37 @@
+<!-- cycle-setup-modal.component.html -->
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Cycle Setup</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <p>To track your ovulation, we need to know about your last menstrual cycle.</p>
+
+  <ion-item>
+    <ion-label position="stacked">First day of last period</ion-label>
+    <ion-input type="date" [(ngModel)]="lastPeriodDate"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Average cycle duration (days)</ion-label>
+    <ion-range 
+      [(ngModel)]="cycleDuration" 
+      min="21" 
+      max="45" 
+      snaps="true" 
+      ticks="true"
+      pin="true">
+      <ion-label slot="start">21</ion-label>
+      <ion-label slot="end">45</ion-label>
+    </ion-range>
+    <ion-note slot="end">{{cycleDuration}} days</ion-note>
+  </ion-item>
+
+  <ion-button expand="block" (click)="saveCycleData()" [disabled]="!lastPeriodDate">
+    Save and Continue
+  </ion-button>
+  <ion-button expand="block" fill="clear" (click)="cancel()">
+    Cancel
+  </ion-button>
+</ion-content>

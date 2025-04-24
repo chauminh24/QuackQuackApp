@@ -3,6 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { DetailedForecastComponent } from '../../components/detailed-forecast/detailed-forecast.component';
 import { WeatherService } from '../../services/weather.service';
 import { LocationService } from '../../services/location.service';
+import { CycleService } from '../../services/cycle.service';
 import { OvulationTrackerPage } from '../ovulation-tracker/ovulation-tracker.page';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,6 +11,7 @@ import { IonicModule } from '@ionic/angular';
 import { AnimatedDuckComponent } from '../../components/animated-duck/animated-duck.component';
 import { WeatherBackgroundComponent } from 'src/app/components/weather-background/weather-background.component';
 import { SettingsPage } from '../settings/settings.page';
+import { CycleSetupModalComponent } from 'src/app/components/cycle-setup-modal/cycle-setup-modal.component';
 
 @Component({
   selector: 'app-home',
@@ -34,7 +36,8 @@ export class HomePage implements OnInit {
   constructor(
     private weatherService: WeatherService,
     private locationService: LocationService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private cycleService: CycleService
   ) { }
 
   async ngOnInit() {
@@ -124,10 +127,30 @@ export class HomePage implements OnInit {
   }
 
   async openOvulationTracker() {
-    const modal = await this.modalCtrl.create({
-      component: OvulationTrackerPage
-    });
-    await modal.present();
+    const hasData = await this.cycleService.getCurrentCycle();
+    
+    if (!hasData) {
+      const modal = await this.modalCtrl.create({
+        component: CycleSetupModalComponent,
+        backdropDismiss: false
+      });
+      
+      await modal.present();
+      const { data } = await modal.onWillDismiss();
+      
+      if (data) {
+        // Only open ovulation tracker if setup was completed
+        const trackerModal = await this.modalCtrl.create({
+          component: OvulationTrackerPage
+        });
+        await trackerModal.present();
+      }
+    } else {
+      const modal = await this.modalCtrl.create({
+        component: OvulationTrackerPage
+      });
+      await modal.present();
+    }
   }
 
   async openSettings() {
