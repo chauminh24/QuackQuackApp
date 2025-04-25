@@ -1,37 +1,62 @@
 <!-- cycle-setup-modal.component.html -->
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Cycle Setup</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title>Menstrual Cycle Setup</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <p>To track your ovulation, we need to know about your last menstrual cycle.</p>
+<ion-content class="ion-padding" [scrollY]="false">
+  <div class="setup-container">
+    <div class="header-image">
+      <ion-img src="assets/images/cycle-calendar.svg" alt="Cycle calendar"></ion-img>
+    </div>
 
-  <ion-item>
-    <ion-label position="stacked">First day of last period</ion-label>
-    <ion-input type="date" [(ngModel)]="lastPeriodDate"></ion-input>
-  </ion-item>
+    <ion-text color="medium" class="ion-text-center">
+      <p>To provide accurate ovulation predictions, we need some information about your menstrual cycle.</p>
+    </ion-text>
 
-  <ion-item>
-    <ion-label position="stacked">Average cycle duration (days)</ion-label>
-    <ion-range 
-      [(ngModel)]="cycleDuration" 
-      min="21" 
-      max="45" 
-      snaps="true" 
-      ticks="true"
-      pin="true">
-      <ion-label slot="start">21</ion-label>
-      <ion-label slot="end">45</ion-label>
-    </ion-range>
-    <ion-note slot="end">{{cycleDuration}} days</ion-note>
-  </ion-item>
+    <ion-card class="input-card">
+      <ion-item lines="none">
+        <ion-icon slot="start" name="calendar" color="primary"></ion-icon>
+        <ion-label position="stacked" color="primary">First day of last period</ion-label>
+        <ion-input type="date" [(ngModel)]="lastPeriodDate" class="custom-date-input" placeholder="Select date" color="primary" style="color: var(--ion-color-primary);">
+        </ion-input>
+      </ion-item>
+    </ion-card>
 
-  <ion-button expand="block" (click)="saveCycleData()" [disabled]="!lastPeriodDate">
-    Save and Continue
-  </ion-button>
-  <ion-button expand="block" fill="clear" (click)="cancel()">
-    Cancel
-  </ion-button>
+    <ion-card class="input-card">
+      <ion-item lines="none">
+        <ion-icon slot="start" name="repeat" color="primary"></ion-icon>
+        <ion-label position="stacked" color="primary">Average cycle length</ion-label>
+        <div class="range-container">
+          <ion-range [(ngModel)]="cycleDuration" min="21" max="45" snaps="true" ticks="false" pin="true"
+            class="custom-range">
+            <ion-label slot="start" class="range-label">21d</ion-label>
+            <ion-label slot="end" class="range-label">45d</ion-label>
+          </ion-range>
+          <span class="duration-display" style="color: var(--ion-color-primary);">
+            {{cycleDuration}} days
+          </span>
+        </div>
+      </ion-item>
+    </ion-card>
+
+    <div class="button-group">
+      <!-- In your HTML, update the save button -->
+      <ion-button expand="block" shape="round" (click)="saveCycleData()" [disabled]="!lastPeriodDate"
+        class="save-button" color="primary">
+        <ion-icon slot="start" name="checkmark-circle"></ion-icon>
+        Save & Continue
+      </ion-button>
+
+      <ion-button expand="block" fill="clear" color="medium" (click)="cancel()" class="cancel-button">
+        Skip for Now
+      </ion-button>
+    </div>
+  </div>
 </ion-content>

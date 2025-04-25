@@ -1,112 +1,181 @@
-ion-toolbar {
+/* detailed-forecast.component.scss */
+.header {
+  ion-toolbar {
     --background: transparent;
-    border: none;
-    box-shadow: none;
-    margin-top: 1em;
+    --border-width: 0;
+    --box-shadow: none;
+    padding-top: env(safe-area-inset-top, 20px);
+    
+    ion-buttons {
+      ion-icon {
+        font-size: 24px;
+        color: var(--ion-text-color);
+      }
+      
+      ion-label {
+        margin-left: 8px;
+        font-weight: 500;
+        font-family: 'Belanosima', sans-serif;
+        color: var(--ion-text-color);
+      }
+    }
+    
+    .close-icon {
+      font-size: 28px;
+      color: var(--ion-text-color);
+    }
+  }
+}
+
+ion-content {
+  --background: var(--ion-background-color);
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 0;
+}
+
+.current-weather {
+  margin-top: 2em;
+  text-align: center;
+  
+  .current-temp {
+    font-size: 3.5rem;
+    font-weight: 600;
+    font-family: 'Belanosima', sans-serif;
+    color: var(--ion-text-color);
+    display: block;
+    line-height: 1;
+  }
+  
+  .current-condition {
+    font-size: 1.1rem;
+    color: var(--ion-color-medium);
+    text-transform: capitalize;
+  }
+}
+
+.section-title {
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 12px;
+  display: block;
+  color: var(--ion-text-color);
+  font-family: 'Belanosima', sans-serif;
+}
+
+/* Panel Styling */
+.forecast-panel {
+  margin-top: 1.5em;
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: var(--card-shadow);
+}
+
+/* Hourly Forecast */
+.hourly-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 16px;
+  padding: 8px 0;
+  scrollbar-width: none; /* Firefox */
+  
+  &::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+}
+
+.hour-item {
+  flex: 0 0 auto;
+  text-align: center;
+  min-width: 60px;
+  
+  p {
+    margin: 4px 0;
+    font-size: 0.9rem;
+    color: var(--ion-text-color);
+    
+    &:first-child {
+      font-weight: 500;
+    }
+    
+    &:last-child {
+      font-weight: 600;
+    }
   }
   
   ion-icon {
-    font-size: 20px;
-  }
-  
-  .close-icon {
     font-size: 28px;
-    cursor: pointer;
+    color: var(--ion-color-primary);
+    margin: 4px 0;
   }
-  
-  ion-label {
-    margin-left: 4px;
-    font-weight: 500;
-  }
+}
 
-  .current-weather {
-    margin-top: 4em;
+/* Daily Forecast */
+.day-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--ion-color-light-shade);
+  
+  &:last-child {
+    border-bottom: none;
   }
   
-  .section-title {
-    font-weight: bold;
-    font-size: 1rem;
-    margin-bottom: 10px;
-    display: block;
-    text-align: left;
+  .day-date {
+    flex: 1.5;
+    font-weight: 500;
+    color: var(--ion-text-color);
   }
   
-  /* Panel Styling */
-  .forecast-panel {
-    margin-top: 2em;
-    background: #fff;
-    color: #000;
-    border-radius: 20px;
-    padding: 12px 16px;
-    margin-bottom: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  
-    @media (prefers-color-scheme: dark) {
-      background: #1e1e1e;
-      color: #fff;
-    }
-  }
-  
-  /* Hourly Forecast */
-  .hourly-scroll {
-    display: flex;
-    overflow-x: auto;
-    gap: 20px;
-  }
-  
-  .hour-item {
-    flex: 0 0 auto;
+  ion-icon {
+    flex: 0.5;
+    font-size: 24px;
+    color: var(--ion-color-primary);
     text-align: center;
   }
   
-  .hour-item p {
-    margin: 2px 0;
-    font-size: 0.9rem;
+  .temp-range {
+    flex: 1;
+    text-align: center;
+    font-weight: 500;
+    color: var(--ion-text-color);
   }
   
-  .hour-item ion-icon {
-    font-size: 28px;
+  .condition {
+    flex: 1;
+    text-align: right;
+    color: var(--ion-color-medium);
+    text-transform: capitalize;
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 400px) {
+  .current-weather {
+    .current-temp {
+      font-size: 3rem;
+    }
   }
   
-  /* 10-Day Forecast */
   .day-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  
-    .day-date {
-      flex: 1;
-      font-weight: 500;
-    }
-  
-    .temp-range {
-      flex: 1;
-      text-align: center;
-    }
-  
-    .condition {
-      flex: 1;
-      text-align: right;
-    }
-  
-    ion-icon {
-      font-size: 22px;
-    }
-  }
-  
-  /* Wind Map Placeholder */
-  .windmap {
-    background: #d1d1d1;
-    height: 120px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-    padding: 8px 12px;
     font-size: 0.9rem;
-    color: #333;
-    border-radius: 20px;
-    cursor: pointer;
+    
+    ion-icon {
+      font-size: 20px;
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .forecast-panel {
+    --card-bg: #1e1e1e;
+    --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
   }
   
+  .day-item {
+    border-bottom-color: #333;
+  }
+}

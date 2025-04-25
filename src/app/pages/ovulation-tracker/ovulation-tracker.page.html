@@ -1,44 +1,63 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>Ovulation Tracker</ion-title>
+    <!-- Header with Date/Time -->
+    <ion-buttons slot="start">
+      <div class="location-time">
+        <ion-text color="light">
+          <h4>{{ currentDate }}</h4>
+          <p>{{ currentTime }}</p>
+        </ion-text>
+      </div>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-avatar (click)="openSettings()" class="avatar">
+        <img src="assets/images/default-avatar.png" alt="User Avatar">
+      </ion-avatar>
+      <ion-button fill="clear" (click)="dismiss()" class="strawberry-button">
+        <img src="assets/icon/strawberryBtn01.svg" alt="Close Tracker" class="strawberry-icon" />
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Ovulation Tracker</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div *ngIf="hasData; else noDataTemplate">
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Today: {{currentDate}}</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <p>Day {{cycleDay}} of your cycle</p>
-        <p *ngIf="daysLeft > 0">{{daysLeft}} days until next period</p>
-        <p *ngIf="daysLeft <= 0">Your period is due or overdue</p>
-      </ion-card-content>
-    </ion-card>
-
-    <ion-button expand="block" (click)="openDetailedCycle()">
-      View Detailed Cycle Info
-    </ion-button>
+<ion-content>
+  <!-- Background (optional) -->
+  <div class="cycle-background" [class.fertile]="currentPhase === 'Fertile'" 
+                              [class.ovulation]="currentPhase === 'Ovulation'" 
+                              [class.luteal]="currentPhase === 'Luteal'" 
+                              [class.menstrual]="currentPhase === 'Menstrual'">
   </div>
 
-  <ng-template #noDataTemplate>
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>No Cycle Data</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <p>You haven't set up your cycle information yet.</p>
-        <ion-button expand="block" (click)="showSetupModal()">
-          Set Up Now
-        </ion-button>
-      </ion-card-content>
-    </ion-card>
-  </ng-template>
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Cycle Phase Display -->
+    <div class="phase-display">
+      <ion-text color="light">
+        <h1>{{ currentPhase }}</h1>
+        <p *ngIf="daysUntilNextEvent > 0">{{ daysUntilNextEvent }} days until {{ nextEvent }}</p>
+        <p *ngIf="daysUntilNextEvent <= 0">{{ nextEvent }} is today</p>
+      </ion-text>
+    </div>
+
+    <!-- Cycle Visualization -->
+    <div class="cycle-visualization">
+      <div class="cycle-progress" [style.width.%]="cycleProgress"></div>
+    </div>
+  </div>
+
+  <!-- Bottom Panel -->
+  <div class="cycle-panel" (click)="openDetailedCycle()">
+    <ion-text class="panel-title text-dark">Cycle Details</ion-text>
+    <div class="cycle-details">
+      <div class="detail-item">
+        <ion-icon name="calendar"></ion-icon>
+        <span>Day {{ cycleDay }} of {{ cycleData?.cycleLength || 28 }}</span>
+      </div>
+      <div class="detail-item">
+        <ion-icon name="repeat"></ion-icon>
+        <span>Next period: {{ nextPeriodDate | date }}</span>
+      </div>
+    </div>
+  </div>
 </ion-content>
