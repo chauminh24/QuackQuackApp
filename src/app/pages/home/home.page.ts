@@ -127,30 +127,29 @@ export class HomePage implements OnInit {
   }
 
   async openOvulationTracker() {
-    const hasData = await this.cycleService.getCurrentCycle();
-    
-    if (!hasData) {
+    console.log('openOvulationTracker called');
+    const isFirstTime = await this.cycleService.isFirstTimeUser(); // Check if the user is a first-time user
+    console.log('Is first-time user:', isFirstTime);
+  
+    if (isFirstTime) { // If the user is a first-time user
+      console.log('No cycle data, opening setup modal');
       const modal = await this.modalCtrl.create({
-        component: CycleSetupModalComponent,
-        backdropDismiss: false
+        component: CycleSetupModalComponent, // Open the setup modal
       });
-      
-      await modal.present();
-      const { data } = await modal.onWillDismiss();
-      
-      if (data) {
-        // Only open ovulation tracker if setup was completed
-        const trackerModal = await this.modalCtrl.create({
-          component: OvulationTrackerPage
-        });
-        await trackerModal.present();
+  
+      const { data } = await modal.onDidDismiss(); // Wait for modal dismissal
+      console.log('Modal dismissed with data:', data);
+      if (!data) { // If the user closes the modal without saving
+        console.log('User closed the modal without saving');
+        return; // Exit the function
       }
-    } else {
-      const modal = await this.modalCtrl.create({
-        component: OvulationTrackerPage
-      });
-      await modal.present();
     }
+  
+    console.log('Opening Ovulation Tracker Page');
+    const trackerModal = await this.modalCtrl.create({
+      component: OvulationTrackerPage, // Open the ovulation tracker page
+    });
+    await trackerModal.present();
   }
 
   async openSettings() {

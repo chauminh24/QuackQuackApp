@@ -14,6 +14,11 @@ export class CycleService {
     this.init();
   }
 
+  async isFirstTimeUser(): Promise<boolean> {
+    const cycles = await this._storage?.get(this.CYCLE_KEY) || [];
+    return cycles.length === 0; // First-time user if no cycles exist
+  }
+
   async init() {
     // If using, define drivers here: await this.storage.defineDriver(/*...*/);
     const storage = await this.storage.create();

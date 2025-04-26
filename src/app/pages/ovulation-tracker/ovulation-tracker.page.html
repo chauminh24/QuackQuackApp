@@ -1,8 +1,8 @@
 <ion-header>
   <ion-toolbar>
-    <!-- Header with Date/Time -->
+    <!-- Header with Current Date/Time -->
     <ion-buttons slot="start">
-      <div class="location-time">
+      <div class="date-time">
         <ion-text color="light">
           <h4>{{ currentDate }}</h4>
           <p>{{ currentTime }}</p>
@@ -22,41 +22,31 @@
 </ion-header>
 
 <ion-content>
-  <!-- Background (optional) -->
-  <div class="cycle-background" [class.fertile]="currentPhase === 'Fertile'" 
+  <!-- Phase Background -->
+  <div class="phase-background" [class.menstrual]="currentPhase === 'Menstruation'" 
+                              [class.follicular]="currentPhase === 'Follicular'" 
                               [class.ovulation]="currentPhase === 'Ovulation'" 
-                              [class.luteal]="currentPhase === 'Luteal'" 
-                              [class.menstrual]="currentPhase === 'Menstrual'">
+                              [class.luteal]="currentPhase === 'Luteal'">
   </div>
 
-  <!-- Main Content -->
-  <div class="main-content">
-    <!-- Cycle Phase Display -->
-    <div class="phase-display">
-      <ion-text color="light">
-        <h1>{{ currentPhase }}</h1>
-        <p *ngIf="daysUntilNextEvent > 0">{{ daysUntilNextEvent }} days until {{ nextEvent }}</p>
-        <p *ngIf="daysUntilNextEvent <= 0">{{ nextEvent }} is today</p>
-      </ion-text>
-    </div>
+  <!-- Animated Duck with Phase -->
+  <app-animated-duck class="phase-duck" [ovulationPhase]="currentPhase"></app-animated-duck>
 
-    <!-- Cycle Visualization -->
-    <div class="cycle-visualization">
-      <div class="cycle-progress" [style.width.%]="cycleProgress"></div>
-    </div>
+  <!-- Main Phase Display -->
+  <div class="phase-display">
+    <ion-text color="light">
+      <h1>{{ currentPhase }}</h1>
+      <p>{{ daysUntilNextEvent }} days until {{ nextEvent }}</p>
+    </ion-text>
   </div>
 
-  <!-- Bottom Panel -->
-  <div class="cycle-panel" (click)="openDetailedCycle()">
-    <ion-text class="panel-title text-dark">Cycle Details</ion-text>
-    <div class="cycle-details">
-      <div class="detail-item">
-        <ion-icon name="calendar"></ion-icon>
-        <span>Day {{ cycleDay }} of {{ cycleData?.cycleLength || 28 }}</span>
-      </div>
-      <div class="detail-item">
-        <ion-icon name="repeat"></ion-icon>
-        <span>Next period: {{ nextPeriodDate | date }}</span>
+  <!-- Weekly Cycle Panel -->
+  <div class="weekly-cycle-panel">
+    <ion-text class="panel-title">Your Cycle</ion-text>
+    <div class="week-days">
+      <div *ngFor="let day of cycleDays" class="day">
+        <span>{{ day.day }}</span>
+        <span>{{ day.date }}</span>
       </div>
     </div>
   </div>

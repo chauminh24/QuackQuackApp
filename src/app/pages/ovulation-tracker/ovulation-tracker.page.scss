@@ -4,17 +4,19 @@ ion-header {
     --background: transparent;
     --border-width: 0;
     
-    .location-time {
+    .date-time {
       h4 {
         font-size: 1.4rem;
         font-weight: bold;
         margin: 0;
+        color: white;
       }
       
       p {
         font-size: 1rem;
         margin: 0;
         opacity: 0.75;
+        color: white;
       }
     }
     
@@ -30,115 +32,132 @@ ion-header {
       --padding-start: 0;
       --padding-end: 0;
       --ripple-color: transparent;
+      
+      .strawberry-icon {
+        width: 40px;
+        height: 40px;
+      }
     }
   }
 }
 
-.cycle-background {
+.phase-background {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   z-index: -1;
-  opacity: 0.2;
+  opacity: 0.3;
   
-  &.fertile {
-    background: linear-gradient(to bottom, #FF9A8B, #FF6B95);
+  &.menstrual {
+    background: #FF9AA2;
+  }
+  
+  &.follicular {
+    background: #A2E1FF;
   }
   
   &.ovulation {
-    background: linear-gradient(to bottom, #FF7676, #F54EA2);
+    background: #FFB7B2;
   }
   
   &.luteal {
-    background: linear-gradient(to bottom, #A18CD1, #FBC2EB);
-  }
-  
-  &.menstrual {
-    background: linear-gradient(to bottom, #FFC3A0, #FFAFBD);
+    background: #C7CEEA;
   }
 }
 
-.main-content {
+.phase-duck {
   position: absolute;
-  top: 20%;
-  left: 16px;
-  right: 16px;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 150px;
+}
+
+.phase-display {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  transform: translateY(-50%);
   
-  .phase-display {
-    h1 {
-      font-size: 3.5rem;
-      font-family: 'Berlin Sans FB Demi', sans-serif;
-      margin: 0;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-    
-    p {
-      margin: 0;
-      font-size: 1.2rem;
-      opacity: 0.9;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    }
+  h1 {
+    font-size: 3.5rem;
+    font-family: 'Berlin Sans FB Demi', sans-serif;
+    margin: 0 0 8px 0;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
   
-  .cycle-visualization {
-    margin-top: 2em;
-    height: 8px;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 4px;
-    overflow: hidden;
-    
-    .cycle-progress {
-      height: 100%;
-      background: var(--ion-color-primary);
-      transition: width 0.5s ease;
-    }
+  p {
+    font-size: 1.5rem;
+    margin: 0;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   }
 }
 
-.cycle-panel {
+.weekly-cycle-panel {
   position: absolute;
   bottom: 16px;
   left: 16px;
   right: 16px;
-  background: var(--card-bg);
+  background: white;
   border-radius: 20px;
   padding: 16px;
-  box-shadow: var(--card-shadow);
-  z-index: 5;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
   
   .panel-title {
+    display: block;
     text-align: center;
     font-weight: 600;
     font-size: 1rem;
     margin-bottom: 12px;
-    display: block;
-    color: var(--ion-text-color);
+    color: #2c2c2c;
   }
   
-  .cycle-details {
+  .week-days {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    justify-content: space-between;
     
-    .detail-item {
+    .day {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 8px;
-      color: var(--ion-text-color);
+      gap: 4px;
       
-      ion-icon {
-        color: var(--ion-color-primary);
+      .day-name {
+        font-size: 0.8rem;
+        color: #666;
+      }
+      
+      .date {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #2c2c2c;
+      }
+      
+      .phase-indicator {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: transparent;
+      }
+      
+      &.period .phase-indicator {
+        background: #FF6B6B;
+      }
+      
+      &.fertile .phase-indicator {
+        background: #FFD166;
+      }
+      
+      &.ovulation .phase-indicator {
+        background: #EF476F;
       }
     }
-  }
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .cycle-panel {
-    --card-bg: #1e1e1e;
-    --card-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
   }
 }

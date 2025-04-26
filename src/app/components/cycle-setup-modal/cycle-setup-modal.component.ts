@@ -1,9 +1,7 @@
-// cycle-setup-modal.component.ts
-import { FormsModule } from '@angular/forms'; // Import FormsModule
-import { CommonModule } from '@angular/common';
-import { IonicModule, Platform } from '@ionic/angular'; // Import Platform for isIOS detection
-
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
 import { ModalController } from '@ionic/angular';
 import { CycleService } from '../../services/cycle.service';
 
@@ -27,13 +25,12 @@ export class CycleSetupModalComponent {
   ) {}
 
   async saveCycleData() {
-    if (this.lastPeriodDate) {
-      await this.cycleService.addNewCycle(new Date(this.lastPeriodDate), this.cycleDuration);
-      this.modalCtrl.dismiss(true); // Dismiss with success flag
-    }
+    const startDate = new Date(this.lastPeriodDate);
+    await this.cycleService.addNewCycle(startDate, this.cycleDuration);
+    this.modalCtrl.dismiss(true); // Close modal and indicate success
   }
 
   cancel() {
-    this.modalCtrl.dismiss(false); // Dismiss with cancel flag
+    this.modalCtrl.dismiss(false); // Close modal without saving
   }
 }

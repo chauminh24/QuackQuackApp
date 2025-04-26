@@ -1,37 +1,29 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { CommonModule } from '@angular/common';
+import { ModalController, IonicModule } from '@ionic/angular';
 import { CycleService } from '../../services/cycle.service';
 import { DetailedCycleComponent } from '../../components/detailed-cycle/detailed-cycle.component';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { SettingsPage } from '../settings/settings.page';
 import { CycleSetupModalComponent } from '../../components/cycle-setup-modal/cycle-setup-modal.component';
+import { AnimatedDuckComponent } from '../../components/animated-duck/animated-duck.component';
 
 @Component({
   selector: 'app-ovulation-tracker',
   templateUrl: './ovulation-tracker.page.html',
   styleUrls: ['./ovulation-tracker.page.scss'],
-  standalone: true,
   imports: [
+    IonicModule,
+    AnimatedDuckComponent,
     CommonModule,
-    FormsModule,
-    IonicModule
-  ]
+  ],
 })
 export class OvulationTrackerPage implements OnInit {
   currentDate: string = '';
   currentTime: string = '';
-  cycleDay: number = 0;
-  daysLeft: number = 0;
-  cycleData: any;
-  hasData: boolean = false;
-  
-  // New properties for cycle tracking
-  currentPhase: string = '';
+  currentPhase: string = 'Loading...';
   nextEvent: string = '';
   daysUntilNextEvent: number = 0;
-  cycleProgress: number = 0;
-  nextPeriodDate: Date = new Date();
+  cycleDays: any[] = [];
 
   constructor(
     private cycleService: CycleService,
@@ -41,93 +33,94 @@ export class OvulationTrackerPage implements OnInit {
   async ngOnInit() {
     this.updateDateTime();
     setInterval(() => this.updateDateTime(), 60000);
-    
-    await this.checkInitialSetup();
-    this.loadCycleData();
+    await this.loadCycleData();
   }
 
   updateDateTime() {
     const now = new Date();
-    this.currentDate = now.toLocaleDateString();
+    this.currentDate = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
     this.currentTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
 
-  async checkInitialSetup() {
+  async loadCycleData() {
     const cycleData = await this.cycleService.getCurrentCycle();
     if (!cycleData) {
       await this.showSetupModal();
+      return;
+    }
+    this.calculateCyclePhases(cycleData);
+  }
+
+  calculateCyclePhases(cycleData: any) {
+    const now = new Date();
+    const startDate = new Date(cycleData.startDate);
+    const cycleLength = cycleData.cycleLength || 28;
+    const ovulationDay = Math.floor(cycleLength * 0.5);
+    const fertileStart = ovulationDay - 5;
+    const fertileEnd = ovulationDay + 1;
+    
+    // Calculate current day in cycle
+    const diffTime = now.getTime() - startDate.getTime();
+    const currentDay = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    
+    // Determine current phase
+    if (currentDay <= 5) {
+      this.currentPhase = 'Menstruation';
+      this.nextEvent = 'Fertile Window';
+      this.daysUntilNextEvent = 6 - currentDay;
+    } else if (currentDay >= fertileStart && currentDay <= fertileEnd) {
+      this.currentPhase = currentDay === ovulationDay ? 'Ovulation' : 'Follicular';
+      this.nextEvent = currentDay < ovulationDay ? 'Ovulation' : 'Luteal Phase';
+      this.daysUntilNextEvent = ovulationDay - currentDay;
+    } else if (currentDay > ovulationDay) {
+      this.currentPhase = 'Luteal';
+      this.nextEvent = 'Period';
+      this.daysUntilNextEvent = cycleLength - currentDay;
+    } else {
+      this.currentPhase = 'Follicular';
+      this.nextEvent = 'Fertile Window';
+      this.daysUntilNextEvent = fertileStart - currentDay;
+    }
+    
+    // Generate weekly cycle view
+    this.generateWeeklyCycle(startDate, cycleLength);
+  }
+
+  generateWeeklyCycle(startDate: Date, cycleLength: number) {
+    const ovulationDay = Math.floor(cycleLength * 0.5);
+    const fertileStart = ovulationDay - 5;
+    const fertileEnd = ovulationDay + 1;
+    const periodDays = 5;
+    
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    this.cycleDays = [];
+    
+    for (let i = 0; i < 7; i++) {
+      const date = new Date();
+      date.setDate(date.getDate() + i);
+      const dayOfCycle = Math.floor((date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+      
+      this.cycleDays.push({
+        day: daysOfWeek[date.getDay()],
+        date: date.getDate(),
+        isPeriod: dayOfCycle <= periodDays,
+        isFertile: dayOfCycle >= fertileStart && dayOfCycle <= fertileEnd,
+        isOvulation: dayOfCycle === ovulationDay
+      });
     }
   }
 
   async showSetupModal() {
     const modal = await this.modalCtrl.create({
       component: CycleSetupModalComponent,
-      backdropDismiss: false
     });
-    
-    await modal.present();
-    const { data } = await modal.onWillDismiss();
-    
+  
+    const { data } = await modal.onDidDismiss();
+    console.log('Modal dismissed with data:', data);
     if (data) {
+      // Reload cycle data after setup
       await this.loadCycleData();
     }
-  }
-
-  async loadCycleData() {
-    this.cycleData = await this.cycleService.getCurrentCycle();
-    this.hasData = !!this.cycleData;
-    
-    if (this.cycleData) {
-      this.calculateCycleInfo();
-    }
-  }
-
-  calculateCycleInfo() {
-    const now = new Date();
-    const startDate = new Date(this.cycleData.startDate);
-    const cycleLength = this.cycleData.cycleLength || 28;
-    
-    // Calculate cycle day
-    const diffTime = Math.abs(now.getTime() - startDate.getTime());
-    this.cycleDay = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-    
-    // Calculate cycle progress
-    this.cycleProgress = (this.cycleDay / cycleLength) * 100;
-    
-    // Determine current phase
-    const ovulationDay = Math.floor(cycleLength * 0.5);
-    const fertileStart = ovulationDay - 5;
-    const fertileEnd = ovulationDay + 1;
-    const lutealStart = ovulationDay + 2;
-    
-    if (this.cycleDay <= 5) {
-      this.currentPhase = 'Menstrual';
-      this.nextEvent = 'Fertile Window';
-      this.daysUntilNextEvent = 6 - this.cycleDay;
-    } else if (this.cycleDay >= fertileStart && this.cycleDay <= fertileEnd) {
-      this.currentPhase = 'Fertile';
-      this.nextEvent = 'Ovulation';
-      this.daysUntilNextEvent = ovulationDay - this.cycleDay;
-    } else if (this.cycleDay === ovulationDay) {
-      this.currentPhase = 'Ovulation';
-      this.nextEvent = 'Luteal Phase';
-      this.daysUntilNextEvent = 1;
-    } else if (this.cycleDay > ovulationDay) {
-      this.currentPhase = 'Luteal';
-      this.nextEvent = 'Period';
-      this.daysUntilNextEvent = cycleLength - this.cycleDay;
-    } else {
-      this.currentPhase = 'Follicular';
-      this.nextEvent = 'Fertile Window';
-      this.daysUntilNextEvent = fertileStart - this.cycleDay;
-    }
-    
-    // Calculate next period date
-    this.nextPeriodDate = new Date(startDate);
-    this.nextPeriodDate.setDate(startDate.getDate() + cycleLength);
-    
-    // Calculate days left
-    this.daysLeft = cycleLength - this.cycleDay;
   }
 
   dismiss() {
@@ -135,14 +128,16 @@ export class OvulationTrackerPage implements OnInit {
   }
 
   async openSettings() {
-    // Implement your settings modal opening logic
+    const modal = await this.modalCtrl.create({
+      component: SettingsPage
+    });
+    await modal.present();
   }
 
-  async openDetailedCycle() {
+  async showDetailedView() {
     const modal = await this.modalCtrl.create({
       component: DetailedCycleComponent,
       componentProps: {
-        cycleData: this.cycleData,
         currentPhase: this.currentPhase,
         nextEvent: this.nextEvent,
         daysUntilNextEvent: this.daysUntilNextEvent
