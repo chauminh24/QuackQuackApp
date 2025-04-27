@@ -1,9 +1,18 @@
 import { Component, Input, OnChanges } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-animated-duck',
   templateUrl: './animated-duck.component.html',
   styleUrls: ['./animated-duck.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule
+  ]
 })
 export class AnimatedDuckComponent implements OnChanges {
   @Input() weatherCondition!: string; // Input for weather

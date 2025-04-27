@@ -178,42 +178,38 @@ export class HomePage implements OnInit {
 
   async openDetailedForecast() {
     try {
-      // Fetch current location
       const position = await this.locationService.getCurrentLocation();
       const { latitude, longitude } = position.coords;
-
-      // Fetch current weather
+  
       const currentWeather = await this.weatherService.getCurrentWeather(latitude, longitude);
-
-      // Fetch hourly forecast
       const hourlyForecastData = await this.weatherService.getHourlyForecast(latitude, longitude);
-      const hourlyForecast = hourlyForecastData.list.slice(0, 12).map((hour: any) => ({
-        time: new Date(hour.dt * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        temp: Math.round(hour.main.temp),
-        icon: this.mapWeatherIcon(hour.weather[0].icon),
-      }));
-
-      // Fetch daily forecast
+      const hourlyForecast = this.processHourlyForecast(hourlyForecastData);
+  
       const dailyForecast = await this.weatherService.getDailyForecast(latitude, longitude);
-
-      // Combine all weather data into a single object
+  
       const weatherData = {
         current: currentWeather,
         hourly: hourlyForecast,
         daily: dailyForecast,
       };
-
-      // Open the modal with the combined weather data
+  
       const modal = await this.modalCtrl.create({
         component: DetailedForecastComponent,
         componentProps: {
-          weatherData: weatherData, // Pass the combined weather data
-          location: this.location, // Pass the location name
+          weatherData,
+          location: this.location,
         },
       });
       await modal.present();
     } catch (error) {
       console.error('Error opening detailed forecast:', error);
+      // Show a user-friendly error message
+      const alert = document.createElement('ion-alert');
+      alert.header = 'Error';
+      alert.message = 'Unable to load detailed forecast. Please try again later.';
+      alert.buttons = ['OK'];
+      document.body.appendChild(alert);
+      await alert.present();
     }
   }
 }
