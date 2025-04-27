@@ -6,9 +6,9 @@ import { Component, Input, OnChanges } from '@angular/core';
   styleUrls: ['./animated-duck.component.scss'],
 })
 export class AnimatedDuckComponent implements OnChanges {
-  @Input() weatherCondition!: string; // Input to accept the weather condition
-  @Input() ovulationPhase!: string; // New input for the ovulation phase
-  duckImage: string = 'assets/images/default-duck.gif'; // Default duck image
+  @Input() weatherCondition!: string; // Input for weather
+  @Input() ovulationPhase!: string;   // Input for menstrual cycle phase
+  duckImage: string = 'assets/images/default-duck.gif'; // Default duck
 
   ngOnChanges() {
     this.updateDuckImage();
@@ -16,46 +16,40 @@ export class AnimatedDuckComponent implements OnChanges {
 
   updateDuckImage() {
     if (this.ovulationPhase) {
-      // Update duck image based on ovulation phase
-      switch (this.ovulationPhase.toLowerCase()) {
-        case 'menstruation':
-          this.duckImage = 'assets/images/menstruation-duck.gif';
-          break;
-        case 'follicular':
-          this.duckImage = 'assets/images/follicular-duck.gif';
-          break;
-        case 'ovulation':
-          this.duckImage = 'assets/images/ovulation-duck.gif';
-          break;
-        case 'luteal':
-          this.duckImage = 'assets/images/luteal-duck.gif';
-          break;
-        default:
-          this.duckImage = 'assets/images/default-duck.gif'; // Fallback image
-          break;
-      }
+      this.updateDuckByPhase();
     } else if (this.weatherCondition) {
-      // Update duck image based on weather condition
-      switch (this.weatherCondition.toLowerCase()) {
-        case 'rain':
-          this.duckImage = 'assets/images/rain-duck.gif';
-          break;
-        case 'clear':
-          this.duckImage = 'assets/images/sunny-duck.gif';
-          break;
-        case 'clouds':
-          this.duckImage = 'assets/images/cloudy-duck.gif';
-          break;
-        case 'snow':
-          this.duckImage = 'assets/images/snow-duck.gif';
-          break;
-        case 'thunderstorm':
-          this.duckImage = 'assets/images/thunderstorm-duck.gif';
-          break;
-        default:
-          this.duckImage = 'assets/images/default-duck.gif'; // Fallback image
-          break;
-      }
+      this.updateDuckByWeather();
+    } else {
+      this.duckImage = 'assets/images/default-duck.gif'; // Fallback
     }
+  }
+
+  updateDuckByPhase() {
+    const phase = this.ovulationPhase.toLowerCase();
+    console.log('Updating duck for phase:', phase);
+
+    const phaseDuckMap: { [key: string]: string } = {
+      'menstruation': 'assets/images/menstruation-duck.gif',
+      'follicular': 'assets/images/follicular-duck.gif',
+      'ovulation': 'assets/images/ovulation-duck.gif',
+      'luteal': 'assets/images/luteal-duck.gif'
+    };
+
+    this.duckImage = phaseDuckMap[phase] || 'assets/images/default-duck.gif';
+  }
+
+  updateDuckByWeather() {
+    const weather = this.weatherCondition.toLowerCase();
+    console.log('Updating duck for weather:', weather);
+
+    const weatherDuckMap: { [key: string]: string } = {
+      'rain': 'assets/images/rain-duck.gif',
+      'clear': 'assets/images/sunny-duck.gif',
+      'clouds': 'assets/images/cloudy-duck.gif',
+      'snow': 'assets/images/snow-duck.gif',
+      'thunderstorm': 'assets/images/thunderstorm-duck.gif'
+    };
+
+    this.duckImage = weatherDuckMap[weather] || 'assets/images/default-duck.gif';
   }
 }

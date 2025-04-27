@@ -25,10 +25,14 @@ export class CycleSetupModalComponent {
   ) {}
 
   async saveCycleData() {
-    const startDate = new Date(this.lastPeriodDate);
-    await this.cycleService.addNewCycle(startDate, this.cycleDuration);
-    this.modalCtrl.dismiss(true); // Close modal and indicate success
+    console.log('Saving cycle data:', {
+      startDate: this.lastPeriodDate,
+      cycleDuration: this.cycleDuration
+    });
+    // await this.cycleService.addNewCycle(startDate, this.cycleDuration); <-- disable this for now
+    this.modalCtrl.dismiss(true); // Just dismiss
   }
+  
 
   cancel() {
     this.modalCtrl.dismiss(false); // Close modal without saving

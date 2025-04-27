@@ -128,30 +128,47 @@ export class HomePage implements OnInit {
 
   async openOvulationTracker() {
     console.log('openOvulationTracker called');
-    const isFirstTime = await this.cycleService.isFirstTimeUser(); // Check if the user is a first-time user
-    console.log('Is first-time user:', isFirstTime);
   
-    if (isFirstTime) { // If the user is a first-time user
-      console.log('No cycle data, opening setup modal');
-      const modal = await this.modalCtrl.create({
-        component: CycleSetupModalComponent, // Open the setup modal
-      });
+    try {
+      await this.cycleService.init();
+      const currentCycle = await this.cycleService.getCurrentCycle();
+      console.log('Current cycle:', currentCycle);
   
-      const { data } = await modal.onDidDismiss(); // Wait for modal dismissal
-      console.log('Modal dismissed with data:', data);
-      if (!data) { // If the user closes the modal without saving
-        console.log('User closed the modal without saving');
-        return; // Exit the function
+      if (!currentCycle) {
+        console.log('No cycle data, opening setup modal');
+        const modal = await this.modalCtrl.create({
+          component: CycleSetupModalComponent,
+        });
+  
+        const { data } = await modal.onDidDismiss();
+        console.log('Modal dismissed with data:', data);
+  
+        if (!data) {
+          console.log('User closed the modal without saving');
+          return;
+        }
       }
+    } catch (error) {
+      console.error('Storage not available or error occurred:', error);
+  
+      // ❗ Instead of opening complicated component, show a simple alert!
+      const alert = document.createElement('ion-alert');
+      alert.header = 'Storage Error';
+      alert.message = 'Storage is not available in this environment. You can continue without saving.';
+      alert.buttons = ['OK'];
+  
+      document.body.appendChild(alert);
+      await alert.present();
+  
+      return; // exit after showing alert
     }
   
     console.log('Opening Ovulation Tracker Page');
     const trackerModal = await this.modalCtrl.create({
-      component: OvulationTrackerPage, // Open the ovulation tracker page
+      component: OvulationTrackerPage,
     });
     await trackerModal.present();
   }
-
   async openSettings() {
     const modal = await this.modalCtrl.create({
       component: SettingsPage,
