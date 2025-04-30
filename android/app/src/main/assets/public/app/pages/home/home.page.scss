@@ -1,0 +1,231 @@
+/* home.page.scss */
+:host {
+  /* Light Mode Defaults */
+  --text-color-light: #ffffff;
+  --text-color-dark: #2c2c2c;
+  --panel-bg-light: #ffffff;
+  --panel-bg-dark: #1e1e1e;
+  --panel-shadow-light: 0 6px 18px rgba(0, 0, 0, 0.1);
+  --panel-shadow-dark: 0 6px 18px rgba(0, 0, 0, 0.3);
+  --avatar-border-light: rgba(255, 255, 255, 0.3);
+  --avatar-border-dark: rgba(0, 0, 0, 0.3);
+}
+
+/* Base Content Styles */
+ion-content {
+  --background: transparent;
+  position: relative;
+}
+
+/* Header Styles */
+ion-header {
+  border: none;
+  box-shadow: none;
+  ion-toolbar {
+    --background: transparent;
+    --border-width: 0;
+    --padding-top: calc(env(safe-area-inset-top, 0) + 12px);
+    --padding-bottom: 6px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    
+    ion-buttons[slot="start"] {
+      .location-time {
+        h4 {
+          font-size: 1.4rem;
+          font-weight: bold;
+          margin: 0;
+          color: var(--ion-text-color);
+        }
+        
+        p {
+          font-size: 1rem;
+          margin: 0;
+          opacity: 0.75;
+          color: var(--ion-text-color);
+        }
+      }
+    }
+    
+    ion-buttons[slot="end"] {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      
+      .avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 2px solid var(--avatar-border);
+      }
+      
+      .strawberry-button {
+        --padding-start: 0;
+        --padding-end: 0;
+        --ripple-color: transparent;
+        
+        .strawberry-icon {
+          width: 40px;
+          height: 40px;
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+      }
+    }
+  }
+}
+
+/* Main Content Area */
+.main-content {
+  position: absolute;
+  top: 20%;
+  left: 16px;
+  right: 16px;
+  z-index: 2;
+  
+  .temperature-display {
+    h1 {
+      font-size: 4rem;
+      font-family: 'Berlin Sans FB Demi', sans-serif;
+      margin: 0;
+      color: var(--ion-text-color);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    p {
+      margin: 0;
+      font-size: 1.2rem;
+      opacity: 0.9;
+      color: var(--ion-text-color);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+
+/* Duck Animation */
+.duck-animation {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}
+
+/* Hourly Forecast Panel */
+.hourly-panel {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  background: var(--panel-bg);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: var(--panel-shadow);
+  z-index: 5;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:active {
+    transform: scale(0.98);
+  }
+  
+  .panel-title {
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: var(--ion-text-color);
+  }
+  
+  .hourly-forecast {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding: 4px 0;
+    scrollbar-width: none;
+    
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .hour-item {
+      text-align: center;
+      flex: 0 0 auto;
+      min-width: 60px;
+      
+      p {
+        font-size: 0.9rem;
+        margin: 4px 0;
+        color: var(--ion-text-color);
+        
+        &:first-child {
+          font-weight: 500;
+        }
+        
+        &:last-child {
+          font-weight: 600;
+        }
+      }
+      
+      ion-icon {
+        font-size: 28px;
+        color: var(--ion-color-primary);
+        margin: 4px 0;
+      }
+    }
+  }
+}
+
+/* Dark Mode Adaptations */
+@media (prefers-color-scheme: dark) {
+  :host {
+    --text-color: var(--text-color-light);
+    --panel-bg: var(--panel-bg-dark);
+    --panel-shadow: var(--panel-shadow-dark);
+    --avatar-border: var(--avatar-border-dark);
+  }
+
+}
+
+/* Light Mode Adaptations */
+@media (prefers-color-scheme: light) {
+  :host {
+    --text-color: var(--text-color-dark);
+    --panel-bg: var(--panel-bg-light);
+    --panel-shadow: var(--panel-shadow-light);
+    --avatar-border: var(--avatar-border-light);
+  }
+  p {
+    color: var(--text-color) !important;
+  }
+  
+  /* Special case for dark text in light mode */
+  .text-dark {
+    color: var(--text-color-dark) !important;
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 400px) {
+  .main-content {
+    top: 15%;
+    
+    .temperature-display {
+      h1 {
+        font-size: 3.5rem;
+      }
+      
+      p {
+        font-size: 1rem;
+      }
+    }
+  }
+  
+  .hourly-panel {
+    padding: 12px;
+    
+    .hourly-forecast {
+      gap: 16px;
+    }
+  }
+}

@@ -1,0 +1,163 @@
+/* ovulation-tracker.page.scss */
+ion-header {
+  ion-toolbar {
+    --background: transparent;
+    --border-width: 0;
+    
+    .date-time {
+      h4 {
+        font-size: 1.4rem;
+        font-weight: bold;
+        margin: 0;
+        color: white;
+      }
+      
+      p {
+        font-size: 1rem;
+        margin: 0;
+        opacity: 0.75;
+        color: white;
+      }
+    }
+    
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .strawberry-button {
+      --padding-start: 0;
+      --padding-end: 0;
+      --ripple-color: transparent;
+      
+      .strawberry-icon {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  }
+}
+
+.phase-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 0.3;
+  
+  &.menstrual {
+    background: #FF9AA2;
+  }
+  
+  &.follicular {
+    background: #A2E1FF;
+  }
+  
+  &.ovulation {
+    background: #FFB7B2;
+  }
+  
+  &.luteal {
+    background: #C7CEEA;
+  }
+}
+
+.phase-duck {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 150px;
+}
+
+.phase-display {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  transform: translateY(-50%);
+  
+  h1 {
+    font-size: 3.5rem;
+    font-family: 'Berlin Sans FB Demi', sans-serif;
+    margin: 0 0 8px 0;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  p {
+    font-size: 1.5rem;
+    margin: 0;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.weekly-cycle-panel {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  background: white;
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  
+  .panel-title {
+    display: block;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: #2c2c2c;
+  }
+  
+  .week-days {
+    display: flex;
+    justify-content: space-between;
+    
+    .day {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      
+      .day-name {
+        font-size: 0.8rem;
+        color: #666;
+      }
+      
+      .date {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #2c2c2c;
+      }
+      
+      .phase-indicator {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: transparent;
+      }
+      
+      &.period .phase-indicator {
+        background: #FF6B6B;
+      }
+      
+      &.fertile .phase-indicator {
+        background: #FFD166;
+      }
+      
+      &.ovulation .phase-indicator {
+        background: #EF476F;
+      }
+    }
+  }
+}

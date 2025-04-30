@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar>
+    <!-- Header with Current Date/Time -->
+    <ion-buttons slot="start">
+      <div class="date-time">
+        <ion-text color="light">
+          <h4>{{ currentDate }}</h4>
+          <p>{{ currentTime }}</p>
+        </ion-text>
+      </div>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-avatar (click)="openSettings()" class="avatar">
+        <img src="assets/images/default-avatar.png" alt="User Avatar">
+      </ion-avatar>
+      <ion-button fill="clear" (click)="dismiss()" class="strawberry-button">
+        <img src="assets/icon/strawberryBtn01.svg" alt="Close Tracker" class="strawberry-icon" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Phase Background -->
+  <div class="phase-background" [class.menstrual]="currentPhase === 'Menstruation'" 
+                              [class.follicular]="currentPhase === 'Follicular'" 
+                              [class.ovulation]="currentPhase === 'Ovulation'" 
+                              [class.luteal]="currentPhase === 'Luteal'">
+  </div>
+
+  <!-- Animated Duck with Phase -->
+  <app-animated-duck class="phase-duck" [ovulationPhase]="currentPhase"></app-animated-duck>
+
+  <!-- Main Phase Display -->
+  <div class="phase-display">
+    <ion-text color="light">
+      <h1>{{ currentPhase }}</h1>
+      <p>{{ daysUntilNextEvent }} days until {{ nextEvent }}</p>
+    </ion-text>
+  </div>
+
+  <!-- Weekly Cycle Panel -->
+  <div class="weekly-cycle-panel">
+    <ion-text class="panel-title">Your Cycle</ion-text>
+    <div class="week-days">
+      <div *ngFor="let day of cycleDays" class="day">
+        <span>{{ day.day }}</span>
+        <span>{{ day.date }}</span>
+      </div>
+    </div>
+  </div>
+</ion-content>
