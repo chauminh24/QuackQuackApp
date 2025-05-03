@@ -192,12 +192,17 @@ export class HomePage implements OnInit {
         hourly: hourlyForecast,
         daily: dailyForecast,
       };
-  
+      const apiKey = this.weatherService.getApiKey();
       const modal = await this.modalCtrl.create({
         component: DetailedForecastComponent,
         componentProps: {
           weatherData,
           location: this.location,
+          currentCoords: {
+            lat: position.coords.latitude,
+            lon: position.coords.longitude
+          },
+          apiKey,
         },
       });
       await modal.present();

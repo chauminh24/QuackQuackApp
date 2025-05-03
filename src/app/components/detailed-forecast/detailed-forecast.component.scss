@@ -1,29 +1,29 @@
-/* detailed-forecast.component.scss */
 .header {
   ion-toolbar {
     --background: transparent;
     --border-width: 0;
     --box-shadow: none;
     padding-top: env(safe-area-inset-top, 20px);
-    
+
     ion-buttons {
       ion-icon {
         font-size: 24px;
-        color: var(--ion-text-color);
       }
-      
+
       ion-label {
         margin-left: 8px;
         font-weight: 500;
         font-family: 'Belanosima', sans-serif;
-        color: var(--ion-text-color);
+        .current-location {
+          font-size: 1.2rem;
+          color: var(--ion-text-color, #f0f0f0) !important;
+        }
       }
     }
-    
+
     .close-icon {
       font-size: 28px;
-      color: var(--ion-text-color);
-    }
+        }
   }
 }
 
@@ -37,19 +37,19 @@ ion-content {
 .current-weather {
   margin-top: 2em;
   text-align: center;
-  
+
   .current-temp {
     font-size: 3.5rem;
     font-weight: 600;
     font-family: 'Belanosima', sans-serif;
-    color: var(--ion-text-color);
+    color: var(--ion-text-color, #f0f0f0) !important;
     display: block;
     line-height: 1;
   }
-  
+
   .current-condition {
     font-size: 1.1rem;
-    color: var(--ion-color-medium);
+    color: var(--ion-color-medium, #f0f0f0) !important;
     text-transform: capitalize;
   }
 }
@@ -59,7 +59,7 @@ ion-content {
   font-size: 1rem;
   margin-bottom: 12px;
   display: block;
-  color: var(--ion-text-color);
+  color: var(--ion-text-color, #2c2c2c);
   font-family: 'Belanosima', sans-serif;
 }
 
@@ -79,10 +79,10 @@ ion-content {
   overflow-x: auto;
   gap: 16px;
   padding: 8px 0;
-  scrollbar-width: none; /* Firefox */
-  
+  scrollbar-width: none;
+
   &::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
+    display: none;
   }
 }
 
@@ -90,26 +90,38 @@ ion-content {
   flex: 0 0 auto;
   text-align: center;
   min-width: 60px;
-  
+
   p {
     margin: 4px 0;
     font-size: 0.9rem;
-    color: var(--ion-text-color);
-    
+    color: var(--ion-text-color, #2c2c2c);
+
     &:first-child {
       font-weight: 500;
     }
-    
+
     &:last-child {
       font-weight: 600;
     }
   }
-  
+
   ion-icon {
     font-size: 28px;
-    color: var(--ion-color-primary);
+    color: var(--ion-color-primary, #F9B858);
     margin: 4px 0;
   }
+
+  .leaflet-map {
+    width: 100%;
+    height: 300px;
+    border-radius: 12px;
+    z-index: 0;
+  }
+  
+  .map-wrapper.fullscreen .leaflet-map {
+    height: 100vh;
+  }
+  
 }
 
 /* Daily Forecast */
@@ -118,36 +130,36 @@ ion-content {
   align-items: center;
   justify-content: space-between;
   padding: 12px 0;
-  border-bottom: 1px solid var(--ion-color-light-shade);
-  
+  border-bottom: 1px solid var(--ion-color-light-shade, #ccc);
+
   &:last-child {
     border-bottom: none;
   }
-  
+
   .day-date {
     flex: 1.5;
     font-weight: 500;
-    color: var(--ion-text-color);
+    color: var(--ion-text-color, #2c2c2c);
   }
-  
+
   ion-icon {
     flex: 0.5;
     font-size: 24px;
-    color: var(--ion-color-primary);
+    color: var(--ion-color-primary, #F9B858);
     text-align: center;
   }
-  
+
   .temp-range {
     flex: 1;
     text-align: center;
     font-weight: 500;
-    color: var(--ion-text-color);
+    color: var(--ion-text-color, #2c2c2c);
   }
-  
+
   .condition {
     flex: 1;
     text-align: right;
-    color: var(--ion-color-medium);
+    color: var(--ion-color-medium, #666666);
     text-transform: capitalize;
   }
 }
@@ -159,10 +171,10 @@ ion-content {
       font-size: 3rem;
     }
   }
-  
+
   .day-item {
     font-size: 0.9rem;
-    
+
     ion-icon {
       font-size: 20px;
     }
@@ -174,8 +186,136 @@ ion-content {
     --card-bg: #1e1e1e;
     --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
   }
-  
+
   .day-item {
     border-bottom-color: #333;
+  }
+}
+@media (prefers-color-scheme: light) {
+  :host {
+    ion-label,
+    ion-text,
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    span,
+    div,
+    .current-temp,
+    .day-date,
+    .temp-range,
+    .condition {
+      color: #2c2c2c !important;
+    }
+
+    
+  }
+}
+/* Map Styles */
+.map-toggle {
+  margin: 1em 0;
+  --border-color: var(--ion-color-primary);
+  --color: var(--ion-color-primary);
+}
+
+.weather-maps {
+  margin-top: 1em;
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: var(--card-shadow);
+}
+
+.map-wrapper {
+  position: relative;
+  height: 300px;
+  margin-top: 1em;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--ion-color-light-shade);
+  
+  &.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 1000;
+    border-radius: 0;
+  }
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  touch-action: none;
+}
+
+.map-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.location-marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  
+  .marker-icon {
+    font-size: 24px;
+    color: var(--ion-color-danger);
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+  }
+}
+
+.map-controls {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  background: rgba(var(--ion-background-color-rgb), 0.7);
+  border-radius: 24px;
+  padding: 4px;
+  
+  .control-button {
+    --padding-start: 8px;
+    --padding-end: 8px;
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+  }
+}
+
+.map-note {
+  display: block;
+  text-align: center;
+  margin-top: 8px;
+  font-size: 0.8em;
+  color: var(--ion-color-medium);
+}
+
+/* Segment Buttons */
+ion-segment {
+  ion-segment-button {
+    --color: var(--ion-color-medium);
+    --color-checked: var(--ion-color-primary);
+    --indicator-color: var(--ion-color-primary);
+    
+    ion-icon {
+      margin-right: 4px;
+    }
+    
+    ion-label {
+      font-size: 0.8em;
+    }
   }
 }

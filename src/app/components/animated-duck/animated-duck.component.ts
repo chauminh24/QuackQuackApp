@@ -17,7 +17,7 @@ import { IonicModule } from '@ionic/angular';
 export class AnimatedDuckComponent implements OnChanges {
   @Input() weatherCondition!: string; // Input for weather
   @Input() ovulationPhase!: string;   // Input for menstrual cycle phase
-  duckImage: string = 'assets/images/default-duck.gif'; // Default duck
+  duckImage: string = 'assets/images/default-duck.png'; // Default duck
 
   ngOnChanges() {
     this.updateDuckImage();
@@ -29,7 +29,7 @@ export class AnimatedDuckComponent implements OnChanges {
     } else if (this.weatherCondition) {
       this.updateDuckByWeather();
     } else {
-      this.duckImage = 'assets/images/default-duck.gif'; // Fallback
+      this.duckImage = 'assets/images/default-duck.png'; // Fallback
     }
   }
 
@@ -38,13 +38,13 @@ export class AnimatedDuckComponent implements OnChanges {
     console.log('Updating duck for phase:', phase);
 
     const phaseDuckMap: { [key: string]: string } = {
-      'menstruation': 'assets/images/menstruation-duck.gif',
-      'follicular': 'assets/images/follicular-duck.gif',
-      'ovulation': 'assets/images/ovulation-duck.gif',
-      'luteal': 'assets/images/luteal-duck.gif'
+      'menstruation': 'assets/images/menstruation-duck.png',
+      'follicular': 'assets/images/follicular-duck.png',
+      'ovulation': 'assets/images/ovulation-duck.png',
+      'luteal': 'assets/images/luteal-duck.png'
     };
 
-    this.duckImage = phaseDuckMap[phase] || 'assets/images/default-duck.gif';
+    this.duckImage = phaseDuckMap[phase] || 'assets/images/default-duck.png';
   }
 
   updateDuckByWeather() {
@@ -52,13 +52,13 @@ export class AnimatedDuckComponent implements OnChanges {
     console.log('Updating duck for weather:', weather);
 
     const weatherDuckMap: { [key: string]: string } = {
-      'rain': 'assets/images/rain-duck.gif',
-      'clear': 'assets/images/sunny-duck.gif',
-      'clouds': 'assets/images/cloudy-duck.gif',
-      'snow': 'assets/images/snow-duck.gif',
-      'thunderstorm': 'assets/images/thunderstorm-duck.gif'
+      'rain': 'assets/images/rain-duck.png',
+      'clear': 'assets/images/sunny-duck.png',
+      'clouds': 'assets/images/cloudy-duck.png',
+      'snow': 'assets/images/snow-duck.png',
+      'thunderstorm': 'assets/images/thunderstorm-duck.png'
     };
 
-    this.duckImage = weatherDuckMap[weather] || 'assets/images/default-duck.gif';
+    this.duckImage = weatherDuckMap[weather] || 'assets/images/default-duck.png';
   }
 }

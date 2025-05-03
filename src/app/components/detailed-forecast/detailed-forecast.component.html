@@ -39,4 +39,42 @@
             <div class="condition">{{ day.condition }}</div>
         </div>
     </div>
+
+    <!-- Map Toggle Button -->
+    <ion-button expand="block" fill="outline" (click)="toggleMapView()" class="map-toggle">
+        {{ showMap ? 'Hide Weather Maps' : 'Show Interactive Maps' }}
+    </ion-button>
+
+    <!-- Weather Maps Section -->
+    <div class="weather-maps" *ngIf="showMap">
+        <!-- Change the segment binding to this: -->
+        <ion-segment [value]="activeMapLayer" (ionChange)="changeMapLayer($event.detail.value?.toString())">
+            <ion-segment-button *ngFor="let layer of mapLayers" [value]="layer.id">
+                <ion-icon [name]="layer.icon"></ion-icon>
+                <ion-label>{{ layer.name }}</ion-label>
+            </ion-segment-button>
+        </ion-segment>
+
+        <!-- Interactive Leaflet Map Container -->
+        <div class="map-wrapper" [class.fullscreen]="isMapFullscreen">
+            <div #mapContainer class="leaflet-map"></div>
+
+            <div class="map-controls">
+                <ion-button (click)="zoomIn()" fill="clear" class="control-button">
+                    <ion-icon name="add"></ion-icon>
+                </ion-button>
+                <ion-button (click)="zoomOut()" fill="clear" class="control-button">
+                    <ion-icon name="remove"></ion-icon>
+                </ion-button>
+                <ion-button (click)="toggleMapFullscreen()" fill="clear" class="control-button">
+                    <ion-icon [name]="isMapFullscreen ? 'contract' : 'expand'"></ion-icon>
+                </ion-button>
+            </div>
+        </div>
+
+
+        <ion-note class="map-note">
+            Tap and drag to pan, use buttons to zoom
+        </ion-note>
+    </div>
 </ion-content>

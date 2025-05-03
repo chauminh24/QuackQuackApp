@@ -8,8 +8,13 @@ import { environment } from 'src/environments/environment';
 export class WeatherService {
   private apiKey = environment.weatherApiKey;
   private baseUrl = 'https://api.openweathermap.org/data/2.5';
-
+  private mapBaseUrl = 'https://tile.openweathermap.org/map';
+  
   constructor(private http: HttpClient) { }
+
+  getApiKey(): string {
+    return this.apiKey;
+  }
 
   async getCurrentWeather(lat: number, lon: number): Promise<any> {
     const url = `${this.baseUrl}/weather?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=metric`;
@@ -80,5 +85,22 @@ export class WeatherService {
       return 'cloudy-background';
     }
     return 'default-background'; // Fallback case
+  }
+
+  getWeatherMapUrl(layer: string, zoom: number = 6): string {
+    // Note: You'll need to subscribe to OpenWeatherMap's Weather Maps 2.0 service
+    // for access to these layers (not included in free tier)
+    return `${this.mapBaseUrl}/${layer}_new/${zoom}/{x}/{y}.png?appid=${this.apiKey}`;
+  }
+
+  getAvailableMapLayers(): {id: string, name: string, icon: string}[] {
+    return [
+      { id: 'precipitation', name: 'Precipitation', icon: 'water' },
+      { id: 'rain', name: 'Forecast Rain', icon: 'rainy' },
+      { id: 'clouds', name: 'Cloud Coverage', icon: 'cloudy' },
+      { id: 'pressure', name: 'Pressure', icon: 'speedometer' },
+      { id: 'wind', name: 'Wind Speed', icon: 'flag' },
+      { id: 'temp', name: 'Temperature', icon: 'thermometer' }
+    ];
   }
 }
