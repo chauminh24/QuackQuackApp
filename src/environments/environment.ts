@@ -5,6 +5,15 @@
 export const environment = {
   production: false,
   weatherApiKey: 'f7246f77874f04ad337197d8909513c1',
+  firebase: {
+    apiKey: "AIzaSyB9rMCbj4N_hhBTHs3-EL-920BmJJMiIUk",
+    authDomain: "quackquackforecast.firebaseapp.com",
+    projectId: "quackquackforecast",
+    storageBucket: "quackquackforecast.firebasestorage.app",
+    messagingSenderId: "970477672013",
+    appId: "1:970477672013:web:ceaf5751c2ca36afbbee04",
+    measurementId: "G-T6TNR7TTL1"
+  }
 };
 
 /*

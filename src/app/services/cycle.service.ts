@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
+import { LocalNotifications } from '@capacitor/local-notifications';
 import * as moment from 'moment';
 
 @Injectable({
@@ -97,4 +98,42 @@ export class CycleService {
       return await this._storage?.get(this.CYCLE_KEY) || [];
     }
   }
+
+  async scheduleOvulationReminder(cycle: any) {
+    const ovulationDay = Math.floor(cycle.cycleLength * 0.5);
+    const start = new Date(cycle.startDate);
+    const ovulationDate = new Date(start);
+    ovulationDate.setDate(start.getDate() + ovulationDay - 1);
+    ovulationDate.setHours(10, 0, 0, 0);
+  
+    const today = new Date();
+    if (
+      today.toDateString() === ovulationDate.toDateString()
+    ) {
+      await LocalNotifications.schedule({
+        notifications: [
+          {
+            title: '💧 Ovulation Today!',
+            body: 'Hydrate & glow, beauty 🌸 You’re shining!',
+            id: 2,
+            schedule: { at: ovulationDate }
+          }
+        ]
+      });
+      console.log('Ovulation reminder set!');
+    }
+
+    LocalNotifications.schedule({
+      notifications: [
+        {
+          title: '💧 Luteal Today!',
+          body: 'Hydrate & glow, bestie 🌸',
+          id: 1337,
+          schedule: { at: new Date(new Date().getTime() + 5000) } // 5 seconds from now
+        }
+      ]
+    });
+  }
+
+  
 }

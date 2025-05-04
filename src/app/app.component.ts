@@ -1,4 +1,5 @@
 import { Component, Renderer2 } from '@angular/core';
+import { PushService } from './services/push.service';
 
 @Component({
   selector: 'app-root',
@@ -8,8 +9,9 @@ import { Component, Renderer2 } from '@angular/core';
   standalone: false,
 })
 export class AppComponent {
-  constructor(private renderer: Renderer2) {
+  constructor(private renderer: Renderer2, private push: PushService) {
     this.addGlobalMediaErrorHandler();
+    this.initializePushNotifications();
   }
 
   addGlobalMediaErrorHandler() {
@@ -27,5 +29,9 @@ export class AppComponent {
         }
       }
     });
+  }
+  initializePushNotifications() {
+    this.push.requestPermission(); // Request notification permission
+    this.push.listenForMessages(); // Start listening for messages
   }
 }
