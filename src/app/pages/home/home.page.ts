@@ -128,47 +128,53 @@ export class HomePage implements OnInit {
 
   async openOvulationTracker() {
     console.log('openOvulationTracker called');
-  
+
     try {
       await this.cycleService.init();
       const currentCycle = await this.cycleService.getCurrentCycle();
       console.log('Current cycle:', currentCycle);
-  
+
       if (!currentCycle) {
-        console.log('No cycle data, opening setup modal');
-        const modal = await this.modalCtrl.create({
-          component: CycleSetupModalComponent,
-        });
-  
-        const { data } = await modal.onDidDismiss();
-        console.log('Modal dismissed with data:', data);
-  
-        if (!data) {
-          console.log('User closed the modal without saving');
-          return;
-        }
+        console.warn('No cycle data found. Prompting user.');
+        const alert = document.createElement('ion-alert');
+        alert.header = 'Cycle Not Set';
+        alert.message = 'No menstrual cycle data found. Please go to settings to enter your cycle information.';
+        alert.buttons = [
+          {
+            text: 'Go to Settings',
+            handler: async () => {
+              const modal = await this.modalCtrl.create({
+                component: SettingsPage,
+              });
+              await modal.present();
+            },
+          },
+          'Cancel'
+        ];
+
+        document.body.appendChild(alert);
+        await alert.present();
+        return;
       }
+
+      // If data exists, open the tracker
+      console.log('Opening Ovulation Tracker Page');
+      const trackerModal = await this.modalCtrl.create({
+        component: OvulationTrackerPage,
+      });
+      await trackerModal.present();
+
     } catch (error) {
-      console.error('Storage not available or error occurred:', error);
-  
-      // ❗ Instead of opening complicated component, show a simple alert!
+      console.error('Error opening ovulation tracker:', error);
       const alert = document.createElement('ion-alert');
-      alert.header = 'Storage Error';
-      alert.message = 'Storage is not available in this environment. You can continue without saving.';
+      alert.header = 'Error';
+      alert.message = 'There was a problem accessing your cycle data. Please try again later.';
       alert.buttons = ['OK'];
-  
       document.body.appendChild(alert);
       await alert.present();
-  
-      return; // exit after showing alert
     }
-  
-    console.log('Opening Ovulation Tracker Page');
-    const trackerModal = await this.modalCtrl.create({
-      component: OvulationTrackerPage,
-    });
-    await trackerModal.present();
   }
+
   async openSettings() {
     const modal = await this.modalCtrl.create({
       component: SettingsPage,
@@ -180,13 +186,13 @@ export class HomePage implements OnInit {
     try {
       const position = await this.locationService.getCurrentLocation();
       const { latitude, longitude } = position.coords;
-  
+
       const currentWeather = await this.weatherService.getCurrentWeather(latitude, longitude);
       const hourlyForecastData = await this.weatherService.getHourlyForecast(latitude, longitude);
       const hourlyForecast = this.processHourlyForecast(hourlyForecastData);
-  
+
       const dailyForecast = await this.weatherService.getDailyForecast(latitude, longitude);
-  
+
       const weatherData = {
         current: currentWeather,
         hourly: hourlyForecast,

@@ -161,3 +161,13 @@ ion-header {
     }
   }
 }
+
+.setup-modal {
+  z-index: 1050 !important; /* Ensure it appears above other elements */
+}
+
+ion-modal .modal-wrapper {
+  display: block;
+  max-height: 90%;
+  height: auto;
+}

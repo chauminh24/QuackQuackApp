@@ -41,14 +41,22 @@ export class OvulationTrackerPage implements OnInit {
     this.currentDate = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
     this.currentTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
-
   async loadCycleData() {
-    const cycleData = await this.cycleService.getCurrentCycle();
-    if (!cycleData) {
-      await this.showSetupModal();
-      return;
+    try {
+      const cycleData = await this.cycleService.getCurrentCycle();
+      if (!cycleData) {
+        console.warn('No cycle data available. Skipping setup modal.');
+        this.currentPhase = 'No Data';
+        this.nextEvent = 'N/A';
+        this.daysUntilNextEvent = 0;
+        this.cycleDays = [];
+        return;
+      }
+      this.calculateCyclePhases(cycleData);
+    } catch (error) {
+      console.error('Error loading cycle data:', error);
+      this.currentPhase = 'Error';
     }
-    this.calculateCyclePhases(cycleData);
   }
 
   calculateCyclePhases(cycleData: any) {
@@ -111,14 +119,20 @@ export class OvulationTrackerPage implements OnInit {
   }
 
   async showSetupModal() {
+    console.log('Creating setup modal...');
     const modal = await this.modalCtrl.create({
       component: CycleSetupModalComponent,
+      cssClass: 'setup-modal',
     });
+  
+    console.log('Presenting setup modal...');
+    await modal.present();
+    console.log('Setup modal presented.');
   
     const { data } = await modal.onDidDismiss();
     console.log('Modal dismissed with data:', data);
+  
     if (data) {
-      // Reload cycle data after setup
       await this.loadCycleData();
     }
   }

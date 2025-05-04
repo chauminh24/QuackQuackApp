@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+import { CycleSetupModalComponent } from '../../components/cycle-setup-modal/cycle-setup-modal.component'; // ✅ Import modal
 
 @Component({
   selector: 'app-settings',
@@ -42,5 +43,13 @@ export class SettingsPage {
 
   dismiss() {
     this.modalCtrl.dismiss();
+  }
+
+  async openCycleSetupModal() {
+    const modal = await this.modalCtrl.create({
+      component: CycleSetupModalComponent,
+      cssClass: 'setup-modal'
+    });
+    await modal.present();
   }
 }

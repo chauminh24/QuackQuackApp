@@ -1,4 +1,3 @@
-// cycle.service.ts
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import * as moment from 'moment';
@@ -9,42 +8,71 @@ import * as moment from 'moment';
 export class CycleService {
   private CYCLE_KEY = 'user_cycles';
   private _storage: Storage | null = null;
+  private isWeb: boolean;
 
   constructor(private storage: Storage) {
+    this.isWeb = !this.isNativePlatform(); // Determine if running on the web
     this.init();
   }
 
+  private isNativePlatform(): boolean {
+    // Check if running in a native environment (Cordova/Capacitor)
+    return !!(window as any).cordova || !!(window as any).Capacitor?.isNativePlatform;
+  }
+
   async init() {
-    if (!this._storage) {
-      const storage = await this.storage.create(); // No arguments!
-      this._storage = storage;
+    if (!this.isWeb) {
+      if (!this._storage) {
+        const storage = await this.storage.create();
+        this._storage = storage;
+      }
     }
   }
 
   // Check if the user has saved any cycle data
   async isFirstTimeUser(): Promise<boolean> {
-    await this.init();
-    const cycles = await this._storage?.get(this.CYCLE_KEY) || [];
-    return cycles.length === 0;
+    if (this.isWeb) {
+      const cycles = JSON.parse(localStorage.getItem(this.CYCLE_KEY) || '[]');
+      return cycles.length === 0;
+    } else {
+      await this.init();
+      const cycles = await this._storage?.get(this.CYCLE_KEY) || [];
+      return cycles.length === 0;
+    }
   }
 
   // Get the current (latest) cycle
   async getCurrentCycle(): Promise<any> {
-    await this.init();
-    const cycles = await this._storage?.get(this.CYCLE_KEY) || [];
-    return cycles.length > 0 ? cycles[0] : null;
+    if (this.isWeb) {
+      const cycles = JSON.parse(localStorage.getItem(this.CYCLE_KEY) || '[]');
+      return cycles.length > 0 ? cycles[0] : null;
+    } else {
+      await this.init();
+      const cycles = await this._storage?.get(this.CYCLE_KEY) || [];
+      return cycles.length > 0 ? cycles[0] : null;
+    }
   }
 
   // Add a new cycle to storage
   async addNewCycle(startDate: Date, cycleLength: number = 28): Promise<void> {
-    await this.init();
-    const cycles = await this._storage?.get(this.CYCLE_KEY) || [];
-    cycles.unshift({
-      startDate: startDate.toISOString(), // Save as ISO string for consistency
-      cycleLength,
-      ovulationDay: Math.floor(cycleLength * 0.5) // Simplified ovulation day
-    });
-    await this._storage?.set(this.CYCLE_KEY, cycles);
+    if (this.isWeb) {
+      const cycles = JSON.parse(localStorage.getItem(this.CYCLE_KEY) || '[]');
+      cycles.unshift({
+        startDate: startDate.toISOString(),
+        cycleLength,
+        ovulationDay: Math.floor(cycleLength * 0.5)
+      });
+      localStorage.setItem(this.CYCLE_KEY, JSON.stringify(cycles));
+    } else {
+      await this.init();
+      const cycles = await this._storage?.get(this.CYCLE_KEY) || [];
+      cycles.unshift({
+        startDate: startDate.toISOString(),
+        cycleLength,
+        ovulationDay: Math.floor(cycleLength * 0.5)
+      });
+      await this._storage?.set(this.CYCLE_KEY, cycles);
+    }
   }
 
   // Calculate which day of the cycle it is today
@@ -62,7 +90,11 @@ export class CycleService {
 
   // Get full history of cycles
   async getCycleHistory(): Promise<any[]> {
-    await this.init();
-    return await this._storage?.get(this.CYCLE_KEY) || [];
+    if (this.isWeb) {
+      return JSON.parse(localStorage.getItem(this.CYCLE_KEY) || '[]');
+    } else {
+      await this.init();
+      return await this._storage?.get(this.CYCLE_KEY) || [];
+    }
   }
 }

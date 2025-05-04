@@ -24,14 +24,32 @@ export class CycleSetupModalComponent {
     private cycleService: CycleService
   ) {}
 
+  ionViewWillEnter() {
+    this.lastPeriodDate = '';
+    this.cycleDuration = 28;
+  }
+  
   async saveCycleData() {
     console.log('Saving cycle data:', {
       startDate: this.lastPeriodDate,
       cycleDuration: this.cycleDuration
     });
-    // await this.cycleService.addNewCycle(startDate, this.cycleDuration); <-- disable this for now
-    this.modalCtrl.dismiss(true); // Just dismiss
+  
+    try {
+      const startDate = new Date(this.lastPeriodDate);
+      await this.cycleService.addNewCycle(startDate, this.cycleDuration);
+      this.modalCtrl.dismiss(true); // Dismiss with success
+    } catch (error) {
+      console.error('Failed to save cycle data:', error);
+      const alert = document.createElement('ion-alert');
+      alert.header = 'Error';
+      alert.message = 'There was a problem saving your cycle. Please try again.';
+      alert.buttons = ['OK'];
+      document.body.appendChild(alert);
+      await alert.present();
+    }
   }
+
   
 
   cancel() {

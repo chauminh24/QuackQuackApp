@@ -22,32 +22,48 @@
 </ion-header>
 
 <ion-content>
-  <!-- Phase Background -->
-  <div class="phase-background" [class.menstrual]="currentPhase === 'Menstruation'" 
-                              [class.follicular]="currentPhase === 'Follicular'" 
-                              [class.ovulation]="currentPhase === 'Ovulation'" 
-                              [class.luteal]="currentPhase === 'Luteal'">
-  </div>
-
-  <!-- Animated Duck with Phase -->
-  <app-animated-duck class="phase-duck" [ovulationPhase]="currentPhase"></app-animated-duck>
-
-  <!-- Main Phase Display -->
-  <div class="phase-display">
-    <ion-text color="light">
-      <h1>{{ currentPhase }}</h1>
-      <p>{{ daysUntilNextEvent }} days until {{ nextEvent }}</p>
+  <!-- If no cycle data -->
+  <div *ngIf="currentPhase === 'No Data'; else cycleContent" class="no-data-message ion-padding">
+    <ion-text color="medium" class="ion-text-center">
+      <h2>No Cycle Data</h2>
+      <p>To see your ovulation tracking, please add your cycle info in the app settings.</p>
     </ion-text>
   </div>
 
-  <!-- Weekly Cycle Panel -->
-  <div class="weekly-cycle-panel">
-    <ion-text class="panel-title">Your Cycle</ion-text>
-    <div class="week-days">
-      <div *ngFor="let day of cycleDays" class="day">
-        <span>{{ day.day }}</span>
-        <span>{{ day.date }}</span>
+  <!-- Main tracker content -->
+  <ng-template #cycleContent>
+    <!-- Phase Background -->
+    <div class="phase-background" 
+         [class.menstrual]="currentPhase === 'Menstruation'" 
+         [class.follicular]="currentPhase === 'Follicular'" 
+         [class.ovulation]="currentPhase === 'Ovulation'" 
+         [class.luteal]="currentPhase === 'Luteal'">
+    </div>
+
+    <!-- Animated Duck with Phase -->
+    <app-animated-duck class="phase-duck" [ovulationPhase]="currentPhase"></app-animated-duck>
+
+    <!-- Main Phase Display -->
+    <div class="phase-display">
+      <ion-text color="light">
+        <h1>{{ currentPhase }}</h1>
+        <p>{{ daysUntilNextEvent }} days until {{ nextEvent }}</p>
+      </ion-text>
+    </div>
+
+    <!-- Weekly Cycle Panel -->
+    <div class="weekly-cycle-panel">
+      <ion-text class="panel-title">Your Cycle</ion-text>
+      <div class="week-days">
+        <div *ngFor="let day of cycleDays" class="day" 
+             [class.period]="day.isPeriod"
+             [class.fertile]="day.isFertile"
+             [class.ovulation]="day.isOvulation">
+          <span class="day-name">{{ day.day }}</span>
+          <span class="date">{{ day.date }}</span>
+          <span class="phase-indicator"></span>
+        </div>
       </div>
     </div>
-  </div>
+  </ng-template>
 </ion-content>
